@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plataforma de práctica para exámenes de Aviación Civil AAC">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style type="text/css">
+        /* ===== VARIABLES & DISEÑO MODERNO ===== */
+        :root {
+            --primary-color: #34495E;
+            --secondary-color: #FFB800;
+            --success-color: #059669;
+            --error-color: #DC2626;
+            --dark-color: #2D3748;
+            --light-bg: #F7FAFC;
+            --card-bg: #FFFFFF;
+            --border-radius-sm: 10px;
+            --border-radius-md: 15px;
+            --border-radius-lg: 20px;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--light-bg);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.7;
+            font-weight: 400;
+        }
+
+        /* ===== CONTAINER ===== */
+        .exam-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .exams-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        /* ===== EXAM CARDS ===== */
+        .exam-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-md);
+            padding: 30px 25px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            animation: fadeInUp 0.8s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+        }
+
+        .exam-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        .exam-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            text-decoration: none;
+        }
+
+        .exam-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .exam-subtitle {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .exam-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary-color), #5D6D7E);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+
+        .exam-button:hover {
+            background: linear-gradient(135deg, #2C3E50, var(--primary-color));
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(45, 55, 72, 0.95);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 15px;
+            text-align: right;
+            z-index: 999;
+        }
+
+        .footer-legend {
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-right: 20px;
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.7rem;
+            }
+
+            .header p {
+                font-size: 0.9rem;
+            }
+
+            .exam-card {
+                padding: 20px 15px;
+            }
+
+            .exam-title {
+                font-size: 1.3rem;
+            }
+
+            .exams-grid {
+                gap: 15px;
+            }
+
+            body {
+                padding: 15px;
+                padding-bottom: 70px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .exam-title {
+                font-size: 1.2rem;
+            }
+
+            .exam-subtitle {
+                font-size: 0.85rem;
+            }
+
+            .exam-info-item {
+                font-size: 0.8rem;
+            }
+
+            .footer-legend {
+                font-size: 0.8rem;
+                margin-right: 10px;
+            }
+        }
+    </style>
+    <title>Exámenes para piloto AAC</title>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Exámenes AAC ✈️</h1>
+        <p>Selecciona el examen que deseas practicar</p>
+    </div>
+
+    <!-- Exams Grid -->
+    <div class="exam-container">
+        <div class="exams-grid">
+
+            <!-- PPL Card -->
+            <a href="PPL.html" class="exam-card">
+                <h2 class="exam-title">EXAMEN PPL</h2>
+                <p class="exam-subtitle">Piloto Privado</p>
+
+                <div class="exam-button">
+                    Iniciar Práctica →
+                </div>
+            </a>
+
+            <!-- Instrumentos Card -->
+            <a href="Instrumentos.html" class="exam-card">
+                <h2 class="exam-title">EXAMEN INSTRUMENTOS</h2>
+                <p class="exam-subtitle">Habilitación de Vuelo por Instrumentos</p>
+
+                <div class="exam-button">
+                    Iniciar Práctica →
+                </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-bar">
+        <div class="footer-legend">
+            J. Peñate
+        </div>
+    </div>
+</body>
+</html>

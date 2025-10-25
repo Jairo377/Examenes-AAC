@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Examen AAC Piloto Privado - Práctica de preguntas para licencia PPL">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style type="text/css">
+        /* ===== VARIABLES & DISEÑO MODERNO ===== */
+        :root {
+            --primary-color: #34495E;
+            --secondary-color: #FFB800;
+            --success-color: #059669;
+            --error-color: #DC2626;
+            --dark-color: #2D3748;
+            --light-bg: #F7FAFC;
+            --card-bg: #FFFFFF;
+            --border-radius-sm: 10px;
+            --border-radius-md: 15px;
+            --border-radius-lg: 20px;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.12);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        /* ===== ESTILOS GENERALES ===== */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding-bottom: 90px;
+            background: var(--light-bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            padding: 20px;
+            margin: 0 auto;
+        }
+
+        /* ===== TÍTULO DEL EXAMEN ===== */
+        #quiz-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            color: var(--primary-color);
+            text-align: center;
+            letter-spacing: -0.5px;
+            line-height: 50px;
+        }
+
+        /* ===== BARRA DE PROGRESO ===== */
+        .progress {
+            height: 8px;
+            background: rgba(52, 73, 94, 0.15);
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            z-index: 1000;
+            border-radius: 50px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Ocultar inicialmente */
+            overflow: visible;
+        }
+
+        .progress-bar {
+            background: var(--primary-color);
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50px;
+            position: relative;
+            height: 100%;
+        }
+
+        .progress-bar span {
+            display: none;
+        }
+
+        /* ===== CARD PRINCIPAL ===== */
+        #range-selection {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            margin-top: 20px;
+        }
+
+        /* ===== INPUTS MODERNOS ===== */
+        .form-group {
+            margin-bottom: 20px;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            display: block;
+        }
+
+        /* Destacar el campo de modo aleatorio */
+        #random-count-group {
+            background: linear-gradient(135deg, rgba(52, 73, 94, 0.05), rgba(52, 73, 94, 0.02));
+            padding: 15px;
+            border-radius: var(--border-radius-md);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        #random-count-group label {
+            color: var(--primary-color);
+        }
+
+        .form-control {
+            border-radius: var(--border-radius-md);
+            border: 2px solid #E2E8F0;
+            padding: 14px 18px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-height: 50px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.1);
+            outline: none;
+        }
+
+        .form-control:disabled {
+            background-color: #F7FAFC;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* ===== TOGGLES CONTAINER ===== */
+        .toggles-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .toggle-wrapper {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* ===== CUSTOM SWITCHES MEJORADOS ===== */
+        .custom-control {
+            padding-left: 0;
+            min-height: auto;
+        }
+
+        .custom-switch {
+            padding-left: 0;
+        }
+
+        .custom-control-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            cursor: pointer;
+            padding-left: 65px;
+            user-select: none;
+            font-size: 0.95rem;
+            display: inline-block;
+            position: relative;
+            line-height: 28px;
+        }
+
+        .custom-switch .custom-control-label::before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 50px;
+            background-color: #E2E8F0;
+            border: 2px solid #CBD5E0;
+            width: 54px;
+            height: 28px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .custom-switch .custom-control-label::after {
+            position: absolute;
+            left: 3px;
+            top: 3px;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            background: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+            background: linear-gradient(135deg, var(--primary-color), #5D6D7E);
+            border-color: var(--primary-color);
+        }
+
+        .custom-switch .custom-control-input:checked ~ .custom-control-label::after {
+            transform: translateX(26px);
+        }
+
+        .custom-switch .custom-control-input:focus ~ .custom-control-label::before {
+            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.15);
+        }
+
+        /* ===== BOTONES MODERNOS ===== */
+        .btn {
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            padding: 14px 24px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            min-height: 50px;
+            font-size: 1rem;
+        }
+
+        .btn-outline-warning {
+            background: linear-gradient(135deg, var(--secondary-color), #FFC933);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-outline-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        /* ===== BOTÓN CONTINUAR ===== */
+        .btn-continue {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .btn-continue:hover {
+            background: #2C3E50;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        /* ===== BOTÓN BORRAR PROGRESO ===== */
+        .btn-delete-progress {
+            background: #E74C3C;
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .btn-delete-progress:hover {
+            background: #C0392B;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        /* ===== INDICADOR DE PROGRESO GUARDADO ===== */
+        .saved-progress-info {
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border-left: 4px solid var(--success-color);
+            padding: 15px 20px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .saved-progress-info p {
+            margin: 0;
+            font-weight: 600;
+            color: #2E7D32;
+            font-size: 0.95rem;
+        }
+
+        /* ===== BOTONES DE OPCIONES ===== */
+        #options-container .btn {
+            margin-bottom: 12px;
+            padding: 18px 20px;
+            text-align: left;
+            white-space: normal;
+            background: white;
+            border: 2px solid #E2E8F0;
+            color: var(--dark-color);
+            border-radius: var(--border-radius-md);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            font-size: 1rem;
+        }
+
+        #options-container .btn:hover:not(:disabled) {
+            transform: translateX(8px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            background: #F7FAFC;
+        }
+
+        #options-container .btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 73, 94, 0.2);
+        }
+
+        /* Estados correcta/incorrecta */
+        .option-correct {
+            background: linear-gradient(135deg, #15803d, #16a34a) !important;
+            color: white !important;
+            border-color: #166534 !important;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(21, 128, 61, 0.4) !important;
+        }
+
+        .option-incorrect {
+            background: linear-gradient(135deg, #b91c1c, #dc2626) !important;
+            color: white !important;
+            border-color: #991b1b !important;
+            box-shadow: 0 4px 12px rgba(185, 28, 28, 0.4) !important;
+        }
+
+        /* ===== BOTÓN SIGUIENTE (NAVEGACIÓN PRINCIPAL) ===== */
+        #next-btn {
+            background: linear-gradient(135deg, var(--secondary-color), #FFC933);
+            color: white;
+            font-size: 1.05rem;
+            padding: 16px 28px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            min-height: 55px;
+            margin-top: 20px;
+        }
+
+        #next-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        #next-btn:disabled {
+            background: #CBD5E0;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+        }
+
+        /* ===== BOTÓN VOLVER AL INICIO (ACCIÓN SECUNDARIA) ===== */
+        #back-btn {
+            background: transparent;
+            color: #718096;
+            font-size: 0.95rem;
+            padding: 12px 20px;
+            border: 2px solid #E2E8F0;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            min-height: 48px;
+        }
+
+        #back-btn:hover:not(:disabled) {
+            background: #F7FAFC;
+            border-color: #CBD5E0;
+            color: var(--dark-color);
+        }
+
+        #back-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+
+        /* ===== QUIZ CONTAINER ===== */
+        .centered-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        #quiz-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            margin-top: 20px;
+        }
+
+        #question {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--dark-color), #1A202C);
+            color: white;
+            padding: 15px;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            text-align: right;
+            z-index: 999;
+        }
+
+        .footer-legend {
+            display: inline-block;
+            font-size: 0.9rem;
+            margin-right: 20px;
+        }
+
+        /* ===== BOTÓN HOME ===== */
+        .btn-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--card-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1001;
+            box-shadow: var(--shadow-md);
+            text-decoration: none;
+        }
+
+        .btn-home:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+            text-decoration: none;
+        }
+
+        .btn-home svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ===== MODALES ===== */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content-custom {
+            background: var(--card-bg);
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .modal-content-custom h3 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .modal-buttons button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            min-height: 50px;
+        }
+
+        .btn-modal-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-modal-primary:hover {
+            background: #2C3E50;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-modal-secondary {
+            background: #718096;
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-modal-secondary:hover {
+            background: #4A5568;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== BOTÓN LIMPIAR PROGRESO ===== */
+        .clear-progress-btn {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--error-color);
+            background: none;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .clear-progress-btn:hover {
+            color: #E63462;
+            transform: scale(1.05);
+        }
+
+        /* ===== INFORMACIÓN DE BASE DE DATOS ===== */
+        #dbLength {
+            font-size: 1.05rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* ===== CONTENEDOR DE PUNTUACIÓN ===== */
+        #score-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 40px;
+            box-shadow: var(--shadow-md);
+            margin-top: 20px;
+        }
+
+        #score {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* ===== RESUMEN DE PREGUNTAS INCORRECTAS ===== */
+        #incorrect-answers-summary {
+            margin-top: 30px;
+        }
+
+        .summary-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .incorrect-answer-item {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--error-color);
+        }
+
+        .incorrect-question-number {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .incorrect-question-text {
+            font-size: 1rem;
+            color: var(--dark-color);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .answer-option {
+            padding: 12px 15px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .user-answer {
+            background: rgba(220, 38, 38, 0.1);
+            border: 2px solid #DC2626;
+            color: #DC2626;
+        }
+
+        .correct-answer {
+            background: rgba(5, 150, 105, 0.1);
+            border: 2px solid #059669;
+            color: #059669;
+        }
+
+        .answer-label {
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        .perfect-score-message {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: white;
+            padding: 25px;
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        /* ===== RESPONSIVE MOBILE-FIRST ===== */
+        @media (max-width: 768px) {
+            .btn-home {
+                top: 15px;
+                left: 15px;
+                width: 45px;
+                height: 45px;
+            }
+
+            .btn-home svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            body {
+                padding-bottom: 100px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            #quiz-title {
+                font-size: 1.6rem;
+                margin-top: 25px;
+                margin-bottom: 25px;
+            }
+
+            #range-selection, #quiz-container, #score-container {
+                padding: 20px;
+                border-radius: var(--border-radius-md);
+            }
+
+            .form-control {
+                font-size: 16px; /* Evita zoom en iOS */
+                padding: 14px 16px;
+            }
+
+            .toggles-container {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .toggle-wrapper {
+                width: 100%;
+            }
+
+            #options-container .btn {
+                font-size: 0.95rem;
+                padding: 16px 18px;
+            }
+
+            #next-btn {
+                font-size: 1rem;
+                padding: 14px 24px;
+            }
+
+            #back-btn {
+                font-size: 0.9rem;
+                padding: 10px 18px;
+            }
+
+            .modal-content-custom {
+                margin: 20% 15px;
+                padding: 30px 20px;
+            }
+
+            .modal-buttons {
+                flex-direction: column;
+            }
+
+            .modal-buttons button {
+                width: 100%;
+            }
+
+            #question {
+                font-size: 1.1rem;
+            }
+
+            .footer-legend {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #quiz-title {
+                font-size: 1.4rem;
+                margin-top: 15px;
+                line-height: 45px;
+            }
+
+            #range-selection, #quiz-container {
+                padding: 18px;
+            }
+
+            .btn {
+                font-size: 0.95rem;
+                padding: 12px 20px;
+            }
+
+            #score {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #range-selection, #quiz-container {
+            animation: fadeIn 0.4s ease;
+        }
+    </style>
+    <title>Exámen AAC Piloto Privado</title>
+</head>
+
+<body>
+
+
+    <!-- Modal de confirmación para volver al inicio -->
+    <div id="back-modal" class="custom-modal">
+        <div class="modal-content-custom">
+            <h3>¿Volver al Inicio?</h3>
+            <p>Tu progreso se guardará automáticamente y podrás continuar después.</p>
+            <div class="modal-buttons">
+                <button class="btn-modal-primary" onclick="confirmBackToHome()">Sí, Volver</button>
+                <button class="btn-modal-secondary" onclick="closeBackModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Home -->
+    <a href="index.html" class="btn-home" id="home-btn" title="Volver al Menú Principal">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+        </svg>
+    </a>
+
+    <!-- Barra de progreso -->
+    <div class="progress">
+        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 5%;" aria-valuenow="0"
+            aria-valuemin="0" aria-valuemax="100">
+            <span id="progress-text" class="text-white">Pregunta 1/2</span>
+        </div>
+    </div>
+
+    <h5 id="quiz-title" class="text-center mt-3">EXAMEN AAC PPL</h5>
+
+    <div class="container">
+        <div id="range-selection">
+            <div class="form-group" id="start-index-group">
+                <label for="start-index">Desde la pregunta:</label>
+                <input type="number" id="start-index" class="form-control" placeholder="Ej: 1" min="1">
+            </div>
+            <div class="form-group" id="end-index-group">
+                <label for="end-index">Hasta la pregunta:</label>
+                <input type="number" id="end-index" class="form-control" placeholder="Ej: 50" min="1">
+            </div>
+
+            <!-- Campo para cantidad de preguntas del examen -->
+            <div class="form-group" id="random-count-group" style="display: none;">
+                <label for="random-count">Cantidad de preguntas para el examen:</label>
+                <input type="number" id="random-count" class="form-control" placeholder="Ej: 50" min="1">
+            </div>
+
+            <!-- Toggles Container -->
+            <div class="toggles-container">
+                <div class="toggle-wrapper">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="randomModeSwitch" onchange="toggleRandomMode()">
+                        <label class="custom-control-label" for="randomModeSwitch">Modo Examen</label>
+                    </div>
+                </div>
+                <div class="toggle-wrapper" id="all-questions-toggle-wrapper">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="allQuestionsSwitch" onchange="toggleAllQuestions()">
+                        <label class="custom-control-label" for="allQuestionsSwitch">Todas</label>
+                    </div>
+                </div>
+                <div class="toggle-wrapper" id="shuffle-toggle-wrapper">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="shuffleSwitch">
+                        <label class="custom-control-label" for="shuffleSwitch">Aleatorio</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicador de progreso guardado -->
+            <div id="saved-progress-info" class="saved-progress-info" style="display: none;">
+                <p id="progress-details"></p>
+            </div>
+
+            <!-- Botón Continuar (visible solo si hay progreso) -->
+            <button id="continue-btn" class="btn btn-continue btn-block" onclick="continueSavedQuiz()" style="display: none;">
+                Continuar desde donde lo dejé
+            </button>
+
+            <!-- Botón Borrar Progreso (visible solo si hay progreso) -->
+            <button id="delete-progress-btn" class="btn btn-delete-progress btn-block" onclick="confirmClearProgress()" style="display: none;">
+                Borrar Progreso
+            </button>
+
+            <!-- Botón Iniciar Prueba (siempre visible) -->
+            <button id="updateQuizz" class="btn btn-outline-warning btn-block" onclick="updateBlock()">
+                Iniciar Prueba
+            </button>
+
+            <div class="text-center mt-3">
+                <strong id="dbLength"></strong>
+            </div>
+        </div>
+
+        <div id="quiz-container" class="centered-container" style="display: none;">
+            <div id="question-count" class="float-center"></div>
+            <br>
+
+            <h4 id="question" class="mt-3"></h4>
+
+            <div id="options-container" class="btn-group-vertical mt-3"></div>
+
+            <!-- Botón Siguiente (navegación principal) -->
+            <button id="next-btn" class="btn btn-next-primary btn-block" onclick="nextQuestion()" style="display: none;">
+                Siguiente →
+            </button>
+
+            <!-- Botón Volver al Inicio (acción secundaria) -->
+            <button id="back-btn" class="btn btn-back-secondary btn-block" onclick="showBackModal()" style="display: none;">
+                Volver al Inicio
+            </button>
+        </div>
+
+        <div id="score-container" style="display: none;">
+            <p id="score" class="text-center mt-3"></p>
+            <button id="restart-btn" class="btn btn-secondary btn-block mt-3" onclick="restartQuiz()">Iniciar
+                nuevamente</button>
+
+            <!-- Resumen de preguntas incorrectas -->
+            <div id="incorrect-answers-summary" class="mt-4"></div>
+        </div>
+    </div>
+    <!-- Franja negra con la leyenda en la esquina inferior derecha -->
+    <div class="footer-bar">
+        <div class="footer-legend">
+            J. Peñate
+        </div>
+    </div>
+    <script>
+                // questions database
+                var questionsRaw = [
+                    {question:'1 - La mayor fuerza del vortex ocurre cuando el avión es...',  options:['a)Ligero, sucio y rápido','b) Pesado, sucio y rápido','c) Pesado, limpio y lento'],correctAnswerIndex:2},
+        {question:'2 - Cuando se aterriza detrás de una aeronave grande, el piloto debe evitar la turbulencia de qué forma:',  options:['a) Sobrevolando la aproximación arriba de la aeronave grande y aterrizando adelante del punto','b) Debajo de la aeronave grande y aterrizando antes del punto de contacto','c) Sobrevolando la aproximación arriba de la aeronave grande y aterrizando antes que el punto'],correctAnswerIndex:0},
+        {question:'3 - ¿Qué es el efecto tierra?',  options:['a) El resultado de la interferencia de la superficie de la tierra con el flujo de aire de una a','b) El resultado de una alteración del flujo de aire incrementado por la resistencia inducida y','c) El resultado del flujo de aire sobre las alas y el punto donde las alas no pueden mantener'],correctAnswerIndex:0},
+        {question:'4 - (Refiérase a la fig. 2) si una aeronave pesa 4,500 lbs que peso aproximado debe la estructura de la aeronave soportar durante un viraje de 45 grados para mantener la altitud?',  options:['a) 4500 lbs','b) 6750 lbs','c) 7200 lbs'],correctAnswerIndex:1},
+        {question:'5 - una aeronave ha sido cargada de manera que el CG está localizado en la parte trasera del límite del CG. ¿Que característica de vuelo no deseable experimentara el piloto con la aeronave cargada de esa forma?',  options:['a) Larga carrera de despegue','b) Dificultad para recuperar la aeronave de un stall','c) Stall a una velocidad más alta que la normal.'],correctAnswerIndex:1},
+        {question:'6 - los vórtices creados en los wingtips por una aeronave grande tienen a:',  options:['a) Hundir la aeronave generando turbulencia','b) Incrementarse en el patrón de trafico','c) Incrementarse en el despegue y aterrizaje'],correctAnswerIndex:0},
+        {question:'7 - (fig. 1) el ángulo agudo A, es el ángulo de:',  options:['a) incidencia','b) ataque','c) diedro'],correctAnswerIndex:1},
+        {question:'8 - La suma del exceso de carga que puede ser soportada por el ala de una aeronave depende de:',  options:['a) posición del CG','b) velocidad de la aeronave','c) mala distribución de la carga'],correctAnswerIndex:1},
+        {question:'9 - los vórtices formados en los tips de las alas se crean cuando la aeronave esta:',  options:['a) operando a altas velocidades','b) con carga excesiva','c) cuando está creando sustentación.'],correctAnswerIndex:2},
+        {question:'10 - cargar una aeronave con el CG más atrás podría causar que la aeronave sea:',  options:['a) menos estable en todas las velocidades','b) menos estable a baja velocidad, pero más estable a alta velocidad','c) menos estable a altas velocidades, pero más estable a baja velocidad'],correctAnswerIndex:0},
+        {question:'11 - que causa que una aeronave (excepto cola en T) baje la nariz cuando la potencia es reducida y los controles no han sido ajustados?',  options:['a) el CG cambia hacia adelante cuando la potencia y la resistencia se reduce','b) la corriente de aire que genera la hélice es reducida y el efecto del elevador se ve reducido','c) cuando la potencia es reducida menos que el peso, la sustentación también es reducida y las alas'],correctAnswerIndex:1},
+        {question:'12 - cuales fuerzas hacen que un avión realice un viraje?',  options:['a) el componente horizontal de sustentación','b) el componente vertical de sustentación','c) la fuerza centrifuga'],correctAnswerIndex:0},
+        {question:'13 - ¿Cuál maniobra básica incrementa el factor de carga de una aeronave comparada al vuelo recto y nivelado?',  options:['a) ascenso','b) virajes','c) stalls'],correctAnswerIndex:1},
+        {question:'14 - ¿Cuál es uno de los propósitos de los flaps?',  options:['a) permitir al piloto realizar aproximaciones escalonadas para aterrizar sin aumentar la velocidad','b) liberar al piloto de la presión continua en los controles','c) disminuir el área alar para variar la sustentación'],correctAnswerIndex:0},
+        {question:'15 - (fig. 2) si una aeronave pesa 3,300 lbs que peso aproximado se debe requerir para que la estructura de la aeronave soporte un banqueo de 30 grados para mantener la altitud?',  options:['a) 1200 lbs','b) 3100 lbs','c) 3960 lbs'],correctAnswerIndex:2},
+        {question:'16 - ¿Los vórtices generados en los extremos de las alas por una aeronave de gran tamaño tienen a?',  options:['a) hundir la aeronave por debajo de la turbulencia generada.','b) aumentar en el patrón de tráfico','c) aumentar en el despegue y aterrizaje de una pista cruzada'],correctAnswerIndex:0},
+        {question:'17 - ¿El término “ángulo de ataque” está definido por el ángulo?',  options:['a) entre la cuerda del ala y el viento relativo','b) entre el ángulo de ascenso de la aeronave y el horizonte','c) formado entre el eje longitudinal de la aeronave y la cuerda del ala'],correctAnswerIndex:0},
+        {question:'18 - ¿Que determina la estabilidad longitudinal de un avión?',  options:['a) la ubicación del cg con respecto al centro de la sustentación','b) la eficacia del estabilizador horizontal, el timón y el trim de ajuste del timón','c) la relación del empuje y la sustentación con el peso y la resistencia'],correctAnswerIndex:0},
+        {question:'19 - ¿De qué debe ser consciente un piloto como resultado del efecto tierra?',  options:['a) Los vórtices en la punta de las alas aumentan creando problemas de estela turbulenta para las aeronaves','b) la resistencia inducida disminuye, por lo tanto, cualquier exceso de velocidad en el punto de con','c) un aterrizaje de pérdida completa requerirá menos deflexión hacia arriba del elevador'],correctAnswerIndex:1},
+        {question:'20 - El ángulo de ataque en el cual las alas de la aeronave entran en stall:',  options:['a) incrementa si el CG esta hacia adelante','b) cambia con un incremento en el peso','c) se mantiene igual sin importar el peso'],correctAnswerIndex:2},
+        {question:'21 - sí en una emergencia la situación requiere un aterrizaje con el viento de cola, los pilotos experimentaran:',  options:['a) velocidad al hacer contacto, mayor distancia de aterrizaje, y mejor control en el aterrizaje','b) grounspeed al hacer contacto, mayor distancia de aterrizaje, y probabilidad de salirse de la pist','c) grounspeed al hacer contacto, menos distancia de aterrizaje, y la probabilidad de salirse de la p'],correctAnswerIndex:1},
+        {question:'22 - ¿Cuál es el propósito del timón direccional en una aeronave?',  options:['a) controlar la guiñada','b) controlar la tendencia del sobre banqueo','c) controlar el roll'],correctAnswerIndex:0},
+        {question:'23 - las cuatro fuerzas que actúan en una aeronave en vuelo son:',  options:['a) sustentación, peso, potencia y resistencia','b) sustentación, peso, gravedad y potencia','c) sustentación, gravedad, potencia y fricción'],correctAnswerIndex:0},
+        {question:'24 - al aterrizar detrás de una aeronave grande, qué procedimiento se debe seguir para evitar vórtices:',  options:['a) permanecer por encima de su trayectoria de vuelo de aproximación final hasta el aterrizaje','b) permanecer debajo y a un lado de su trayectoria de vuelo de aproximación final','c) Manténgase muy por debajo de su trayectoria de vuelo de aproximación final y aterrice al menos 20'],correctAnswerIndex:0},
+        {question:'25 - El término “ángulo de ataque” es definido como el ángulo entre:',  options:['a) la cuerda del ala y el viento relativo','b) el eje longitudinal de la aeronave y el aire relativo','c) el centro de línea de la aeronave y el viento relativo'],correctAnswerIndex:0},
+        {question:'26 - seleccionar los cuatro fundamentos de vuelo que intervienen en la maniobra de una aeronave',  options:['a) potencia, banqueo, y trim','b) encendido, taxeo, despegue y aterrizaje','c) vuelo recto y nivelado, virajes, ascensos y descensos.'],correctAnswerIndex:2},
+        {question:'27 - que determina la estabilidad longitudinal de una aeronave?',  options:['a) la ubicación del CG con respecto al centro de la sustentación.','b) la eficacia del estabilizador horizontal, el timón y la aleta compensadora del timón de dirección','c) la relación del empuje y la sustentación con el peso y la resistencia'],correctAnswerIndex:0},
+        {question:'28 - Durante un spin a la izquierda cual ala es/esta “stalled”?',  options:['a) ambas alas están stalled','b) ninguna esta stalled','c) solo el ala izquierda esta stalled'],correctAnswerIndex:0},
+        {question:'29 - ¿Cuál es la relación de la sustentación, resistencia, potencia y peso, cuando la aeronave se encuentra en vuelo recto y nivelado?',  options:['a) la sustentación es igual al peso y la potencia es igual a la resistencia','b) sustentación, resistencia y peso son iguales a la potencia','c) sustentación y peso son iguales a la potencia y resistencia'],correctAnswerIndex:0},
+        {question:'30 - una aeronave ha sido cargada de una manera que el CG quedo atrás del límite, que experimentara el piloto debido a eso',  options:['a) larga carrera de despegue','b) dificultad para recuperar la aeronave de una condición de stall','c) la aeronave entrara en stall a una velocidad mayor que la normal.'],correctAnswerIndex:1},
+        {question:'31 - (fig. 62) al volar el rumbo rectangular, ¿cuándo giraría la aeronave a menos de 90?',  options:['a) esquina 1 y 4','b) esquina 1 y 2','c) esquina 2 y 4'],correctAnswerIndex:0},
+        {question:'32 - ¿Qué declaración se relaciona con el teorema de Bernoullis?',  options:['a) para cada acción hay una reacción opuesta','b) una fuerza adicional es generada en la superficie inferior del ala','c) el aire que viaja más rápido sobre la superficie superior curva de un perfil aerodinámico causa u'],correctAnswerIndex:2},
+        {question:'33 - ¿La mayor fuerza de vórtice ocurre cuando?',  options:['a) ligera, sucia y rápida','b) pesada, sucia y rápida','c) pesada, limpia y lenta'],correctAnswerIndex:2},
+        {question:'34 - Al ejecutar una aproximación de emergencia para aterrizar en un avión de un solo motor, es importante mantener una velocidad de planeo constante porque las variaciones en la velocidad de planeo:',  options:['a) incrementa el enfriamiento explosivo en el motor','b) asegurar el ángulo de descenso hasta el flare','c) anula todos los intentos de precisión al juzgar la distancia de planeo y el lugar de aterrizaje'],correctAnswerIndex:2},
+        {question:'35 - que es el efecto tierra?',  options:['a) el resultado de la interferencia entre la superficie de la tierra con el patrón de flujo de aire','b) el resultado de la alteración del flujo de aire en el patrón, incrementando la resistencia induci','c) el resultado del desorden del flujo de aire en el patrón sobre las alas de la aeronave al punto d'],correctAnswerIndex:0},
+        {question:'36 - Al aterrizar detrás de una aeronave grande, el piloto debe evitar la estela turbulenta manteniéndose:',  options:['a) por encima de la trayectoria de aproximación final de las grandes aeronaves y aterrizando más all','b) debajo de la trayectoria de aproximación final de las grandes aeronaves y aterrizaje antes del pu','c) por encima de la trayectoria de aproximación final de las grandes aeronaves y aterrizaje antes de'],correctAnswerIndex:0},
+        {question:'37 - ¿La flotación causada por el fenómeno del efecto tierra será más evidente durante una aproximación a tierra que en?',  options:['a) menos que la longitud de la envergadura sobre la superficie','b) el doble de la longitud de la envergadura sobre la superficie','c) un ángulo de ataque más alto de lo normal'],correctAnswerIndex:0},
+        {question:'38 - ¿Una aeronave se dice que es estable cuándo?',  options:['a) es difícil de entrar en perdida','b) requiere menos esfuerzo para controlarla','c) no entra en spin'],correctAnswerIndex:1},
+        {question:'39 - cuáles son las cuatro fuerzas que actúan en una aeronave en equilibrio?',  options:['a) durante vuelo sin aceleración','b) cuando la aeronave está acelerando','c) cuando la aeronave esta en tierra'],correctAnswerIndex:0},
+        {question:'40 - ¿Cómo circula el vórtice de estela turbulenta alrededor de cada punta de ala?',  options:['a) hacia adentro, hacia arriba y alrededor de cada punta','b) hacia adentro, hacia arriba y hacia la izquierda','c) hacia afuera, hacia arriba y alrededor de cada punta'],correctAnswerIndex:2},
+        {question:'41 - Cambios en el centro de presión de las alas, afecta la aeronave:',  options:['a) sustentación/resistencia','b) capacidad de sustentación','c) balance aerodinámico y controlabilidad.'],correctAnswerIndex:2},
+        {question:'42 - al salir detrás de una aeronave pesada, el piloto debe evitar estela turbulenta maniobrando la aeronave',  options:['a) abajo y a favor del viento desde el avión pesado','b) por encima y contra el viento del avión pesado','c) abajo y contra el viento del avión pesado'],correctAnswerIndex:1},
+        {question:'43 - cambios en el centro de presión del ala afecta a la aeronave:',  options:['a) sustentación/resistencia','b) capacidad de sustentación','c) balance aerodinámico y controlabilidad'],correctAnswerIndex:2},
+        {question:'44 - ¿El efecto tierra está más probable que resulte en qué problema?',  options:['a) asentarse en la superficie abruptamente durante el aterrizaje','b) despegar antes de alcanzar la velocidad de despegue recomendada','c) incapacidad para despegar a pesar de que la velocidad es suficiente para las necesidades normales'],correctAnswerIndex:1},
+        {question:'45 - (fig. 2) si una aeronave pesa 2300 lbs que peso aproximado debería de ser requerido para que la estructura de la aeronave soporte un viraje de 60 grados y mantener la altitud?',  options:['a) 2300 lbs','b) 3400 lbs','c) 4600 lbs'],correctAnswerIndex:2},
+        {question:'46 - (fig. 66) Mientras practica giros en S, se hace un semicírculo consistentemente más pequeño en un lado de la carretera que en el otro, y este giro no se completa antes de cruzar la carretera o la línea de referencia, lo más probable es que esto ocurra a su vez.',  options:['a) 1-2-3 el banqueo es disminuido demasiado rápido durante la última parte del viraje.','b) 4-5-6 el banqueo es aumentado rápidamente durante la parte inicial del viraje.','c) 4-5-6 el banqueo es aumentado lentamente durante la parte final del viraje.'],correctAnswerIndex:1},
+        {question:'47 - ¿En qué condiciones una aeronave puede entrar en un “spin”?',  options:['a) Parcialmente en stall con un ala','b) En un viraje pronunciado','c) En STALL'],correctAnswerIndex:2},
+        {question:'48 - ¿Qué es la pre-ignición?',  options:['a) Combustión','b) Es una chispa adelantada','c) Detonación'],correctAnswerIndex:1},
+        {question:'49 - ¿Cuál es una ventaja de las hélices de paso variable?',  options:['a) Permite al piloto seleccionar y mantener la velocidad de crucero','b) Permite al piloto seleccionar el ángulo de la hélice para un mejor rendimiento','c) Provee una operación más suave con RPM estables y elimina la vibración'],correctAnswerIndex:1},
+        {question:'50 - Una indicación de alta temperatura de aceite puede ser causada por:',  options:['a) El nivel de aceite es muy bajo','b) Operando con aceite demasiado viscoso','c) Operando con una mezcla excesivamente rica'],correctAnswerIndex:0},
+        {question:'51 - Aplicar calor al carburador producirá:',  options:['a) Agrega más aire a través del carburador','b) Enriquece la mezcla de aire y combustible','c) No afecta a la mezcla de aire y combustible'],correctAnswerIndex:1},
+        {question:'52 - La posibilidad de formación de hielo en el carburador existe aun cuando la temperatura del aire es:',  options:['a) Tan alta como 70F y la humedad relativa es alta','b) Tan alta como 95F y la humedad visible','c) Tan baja como 0F y la humedad relativa es alta'],correctAnswerIndex:0},
+        {question:'53 - Para el enfriamiento interno, los motores recíprocos especialmente dependen de:',  options:['a) El uso de un termostato','b) Que el aire fluya sobre la salida del manifold','c) La circulación de aceite lubricante.'],correctAnswerIndex:2},
+        {question:'54 - ¿Cuál es el propósito del sistema de la doble ignición en una aeronave?',  options:['a) Mejorar el rendimiento del motor','b) Mantener el calor uniforme','c) Balancear la presión de la cabeza del cilindro'],correctAnswerIndex:0},
+        {question:'55 - La detonación puede ocurrir en seteos de potencia demasiado altos:',  options:['a) la mezcla de combustible se enciende instantáneamente en lugar de quemarse de manera progre','b) una mezcla excesivamente rica provoca una ganancia explosiva de potencia','c) la mezcla de combustible se enciende demasiado pronto debido a los depósitos de carbón cali'],correctAnswerIndex:0},
+        {question:'56 - mientras se cruza a 9,500ft MSL, la mezcla de aire y combustible esta propiamente ajustada. ¿Qué ocurre si se desciende a 4,500 ft MSL sin reajustar la mezcla?',  options:['a) La mezcla de aire/combustible se vuelve demasiado pobre','b) Habrá más combustible en los cilindros que se necesita para una combustión normal y el exces','c) El exceso de mezcla creara mayor temperatura en la cabeza del cilindro y puede causar deton'],correctAnswerIndex:0},
+        {question:'57 - Si los marcadores de temperatura de aceite y de la cabeza de cilindro exceden su rango de operación normal, el piloto pudo haber estado operando con:',  options:['a) La mezcla demasiado rica','b) Presión de aceite más alta que lo normal','c) Demasiada potencia y con la mezcla demasiado recortada'],correctAnswerIndex:2},
+        {question:'58 - ¿El cuidado que se debe tener en la operación de un motor equipado con una hélice de paso variable es?',  options:['a) Evitar altas RPM con la presión del manifold','b) Evitar altos seteos de manifold pressure con bajas RPM','c) Siempre usar mezcla rica con altas RPM'],correctAnswerIndex:1},
+        {question:'59 - Con respecto al hielo del carburador, los sistemas de carburador de tipo flotador en comparación con el sistema de inyección de combustible generalmente se consideran:',  options:['a) Más susceptible a congelarse','b) Igualmente susceptible a congelarse','c) Menos susceptible a congelarse'],correctAnswerIndex:0},
+        {question:'60 - La presencia de hielo en el carburador en una aeronave equipada con una hélice de paso fijo puede ser verificado aplicando calor en el carburador y notara:',  options:['a) Un incremento en las RPM y luego una disminución gradual de las RPM','b) Una disminución en las RPM y luego una indicación constante de las RPM','c) Una disminución en las RPM y luego un incremento gradual en las RPM'],correctAnswerIndex:2},
+        {question:'61 - El propósito básico de ajustar la mezcla de combustible / aire en altitud es:',  options:['a) Disminuir la cantidad de combustible en la mezcla para compensar el incremento de la densid','b) Disminuir el flujo del combustible para compensar la disminución de la densidad del aire','c) Incrementar la cantidad de combustible en la mezcla para compensar la disminución de la pre'],correctAnswerIndex:1},
+        {question:'62 - ¿Durante la inspección prevuelo, quien es el responsable de determinar que la aeronave es segura para realizar el vuelo?',  options:['a) El piloto al mando','b) El dueño o el operador','c) El mecánico certificado que realizo la inspección anual'],correctAnswerIndex:0},
+        {question:'63 - La regla más importante para recordar en caso de una falla de motor después de estar en el aire es:',  options:['a) Inmediatamente establecer la velocidad y actitud de planeo','b) Rápidamente chequear el flujo de combustible','c) Determinar la dirección del viento para realizar el aterrizaje forzoso'],correctAnswerIndex:0},
+        {question:'64 - ¿Qué causa el factor p que el avión se desvíe hacia la izquierda?',  options:['a) Cuando está a bajos ángulos de ataque.','b) Cuando está a altos ángulos de ataque','c) A altas velocidades'],correctAnswerIndex:1},
+        {question:'65 - qué condición es más favorable para el desarrollo de la formación de hielo en el carburador?',  options:['a) Cualquier temperatura abajo del punto de congelamiento y la humedad relativa de menos del 5','b) Temperatura entre 32 y 50F y baja humedad','c) Temperatura entre 20 y 70F y alta humedad.'],correctAnswerIndex:2},
+        {question:'66 - ¿Cuál es el procedimiento para enfriar un motor que está sobrecalentando?',  options:['a) Enriquecer la mezcla con el combustible','b) Incrementar las RPM','c) Reducir la velocidad'],correctAnswerIndex:0},
+        {question:'67 - ¿Si el grado de combustible utilizado en el motor de un avión es menor que el especificado, lo más probable es que cause?',  options:['a) Una mezcla no uniforme de aire y combustible','b) Baja temperatura en la cabeza del cilindro','c) Detonación'],correctAnswerIndex:2},
+        {question:'68 - La detonación ocurre en un motor reciproco de avión cuando:',  options:['a) las bujías están sucias o en cortocircuito o el cableado está defectuoso','b) puntos calientes en la cámara de combustión encienden la mezcla de combustible / aire antes','c) la carga no quemada en los cilindros explota en lugar de quemarse normalmente'],correctAnswerIndex:2},
+        {question:'69 - La tendencia de giro a la izquierda de un avión causada por el factor p es el resultado de la:',  options:['a) rotación en sentido horario del motor y la hélice girando el avión en sentido antihorario','b) la pala de la hélice desciende a la derecha, produciendo más empuje que la pala ascendente d','c) Fuerzas giroscópicas aplicadas a las palas giratorias de la hélice que actúan 90 antes del'],correctAnswerIndex:1},
+        {question:'70 - cual debería de ser la primera acción después de encender el motor de la aeronave?',  options:['a) Ajustar las RPM y chequear las indicaciones de los parámetros de motor','b) coloque el magneto o el interruptor de encendido momentáneamente en la posición de apagado p','c) probar frenos y freno de parqueo'],correctAnswerIndex:0},
+        {question:'71 - en aeronaves equipadas con bombas de combustible, ¿cuándo se utiliza la bomba eléctrica auxiliar?',  options:['a) todo el tiempo para ayudar a la bomba de combustible impulsada por el motor','b) en caso de que falle la bomba de combustible accionada por motor','c) constantemente excepto al arrancar el motor'],correctAnswerIndex:1},
+        {question:'72 - ¿Qué acción debe un piloto tomar para enfriar el motor de una aeronave que está calentando durante el ascenso?',  options:['a) Reducir el régimen de ascenso e incrementar la velocidad','b) Reducir la velocidad de ascenso e incrementar las RPM','c) Incrementar la velocidad de ascenso e incrementar las RPM'],correctAnswerIndex:0},
+        {question:'73 - Alta temperatura en el motor produce:',  options:['a) provoca daños en las mangueras conductoras de calor y deformación de las aletas de refriger','b) Causa pérdida de potencia, consumo excesivo de aceite y posible daño interno permanente del','c) no afecta al motor de un avión'],correctAnswerIndex:1},
+        {question:'74 - ¿Cómo se debe realizar una inspección previa al vuelo de la aeronave para el primer vuelo del día?',  options:['a) Chequeo rápido de combustible y aceite','b) Revisión completa y sistemática recomendada por el fabricante.','c) Cualquier revisión que determine el piloto al mando.'],correctAnswerIndex:1},
+        {question:'75 - el principio de funcionamiento del carburador tipo flotador',  options:['a) Medición automática de aire en el venturi a medida que la aeronave gana altitud.','b) diferencia de presión de aire en el tubo de venturi y la entrada de aire','c) aumento de la velocidad del aire en el tubo de venturi que provoca un aumento de la presión'],correctAnswerIndex:1},
+        {question:'76 - Llenar los tanques de combustible después del último vuelo del día se considera un buen procedimiento operativo porque',  options:['a) forzar el agua existente a la parte superior del tanque lejos de las líneas de combustible','b) Evitar la expansión del combustible eliminando el espacio de aire en los tanques.','c) prevenir la condensación de humedad eliminando el espacio de aire en los tanques'],correctAnswerIndex:2},
+        {question:'77 - Si fuera necesario propulsar manualmente un motor de avión, es extremadamente importante que un piloto competente:',  options:['a) Clarear el área antes de encender','b) Estar en la cabina de control de la aeronave','c) Estar en la cabina de control y decir los comandos'],correctAnswerIndex:1},
+        {question:'78 - Existe la posibilidad de que se forme hielo en el carburador incluso si la temperatura del aire ambiente es tan:',  options:['a) Alta a 70F y la humedad relativa es alta','b) Alta a 95F y la humedad es visible','c) Baja a 0F y la humedad relativa es alta'],correctAnswerIndex:0},
+        {question:'79 - El propósito de ajustar la mezcla de aire/combustible dependiendo la altitud es debido a?',  options:['a) Disminuye la cantidad de combustible en la mezcla para compensar por el incremento de la de','b) Disminuye el flujo de combustible para compensar la disminución de la densidad del aire','c) Incrementa la cantidad de combustible en la mezcla para compensar la disminución de la dens'],correctAnswerIndex:1},
+        {question:'80 - ¿Quién es el responsable para el mantenimiento de la aeronave y su condición aeronavegable?',  options:['a) Piloto al mando','b) Dueño u operador','c) Mecánico'],correctAnswerIndex:1},
+        {question:'81 - ¿Cuál es uno de los propósitos de usar motores recíprocos?',  options:['a) Mejor distribución del calor','b) Para prevenir la duración de los cilindros y mantener temperaturas bajas','c) Son relativamente simples y baratos de operar'],correctAnswerIndex:2},
+        {question:'82 - ¿Qué tipo combustible puede ser sustituido para una aeronave si no hay disponible el combustible recomendado?',  options:['a) El octanaje más alto al recomendado','b) El octanaje más bajo al recomendado','c) Gasolina sin plomo usada en vehículos del mismo octanaje'],correctAnswerIndex:0},
+        {question:'83 - qué cambio ocurre en la mezcla de combustible / aire cuando se aplica calor al carburador?',  options:['a) Disminución en las RPM debido a la mezcla recortada','b) La mezcla aire/combustible se vuelve más rica','c) La mezcla aire/combustible se vuelve pobre'],correctAnswerIndex:1},
+        {question:'84 - que probablemente causaría que los medidores de temperatura de la culata de cilindros y de temperatura del aceite del motor excedan sus rangos de operación normales?',  options:['a) Usar combustible que tiene menos octanaje que el especificado','b) Usar combustible que tiene más alto octanaje','c) Operar con presiones altas de temperatura'],correctAnswerIndex:0},
+        {question:'85 - El principio de funcionamiento de los carburadores de flotador se basa en el:',  options:['a) Medición automática de aire en el venturi a medida que la aeronave gana altitud.','b) diferencia de presión de aire en la garganta del venturi y la entrada de aire','c) aumento de la velocidad del aire en la garganta del venturi que provoca un aumento de la pr'],correctAnswerIndex:1},
+        {question:'86 - ¿La formación de hielo en el carburador puede ocurrir cuando la OAT es tan alta como?',  options:['a) 100F y humedad visible','b) 20C y alta humedad relativa','c) 75F y baja humedad relativa'],correctAnswerIndex:1},
+        {question:'87 - Durante la prueba de motor en un aeropuerto de alta elevación, el piloto escucha asperezas en el motor que no es afectada por el chequeo de magnetos ni en el chequeo del carburador. ¿Debido a estas circunstancias cual es la acción más lógica para tomar?',  options:['a) Revisar los resultados obtenidos alineando la mezcla','b) Regresar al hangar para su revisión','c) Reducir la presión del manifold para controlar la detonación.'],correctAnswerIndex:0},
+        {question:'88 - En general, el uso del calor del carburador tiende a:',  options:['a) Disminuir el rendimiento del motor','b) Incrementar el rendimiento del motor','c) No tiene ningún efecto en el rendimiento del motor'],correctAnswerIndex:0},
+        {question:'89 - Si una aeronave está equipada con una propela de paso fijo y carburador de tipo flotante, la primera indicación de formación de hielo en el carburador seria:',  options:['a) Aumento en las RPM','b) Asperezas en el motor','c) Perdida de RPM'],correctAnswerIndex:2},
+        {question:'90 - ¿Qué tipo de combustible se puede sustituir por una aeronave si no se dispone del octanaje recomendado?',  options:['a) el siguiente gas de aviación de mayor octanaje','b) el siguiente gas de aviación de menor octanaje','c) Gas automotriz sin plomo del mismo octanaje'],correctAnswerIndex:0},
+        {question:'91 - Se produce una falla del sistema eléctrico (batería y alternador) durante el vuelo. en esta situación, tu harías:',  options:['a) Experimentaría falla en el equipo de aviónica','b) Experimentaría falla en el sistema de ignición del avión, los marcadores de combustible, sis','c) Experimentaría falla de motor debido a la perdida de la bomba de combustible y también fall'],correctAnswerIndex:0},
+        {question:'92 - ¿Cuándo el factor p hace que el avión se desvíe hacia la izquierda?',  options:['a) Bajo ángulo de ataque','b) Alto ángulo de ataque','c) A altas velocidades'],correctAnswerIndex:1},
+        {question:'93 - Alta temperatura en el motor ya sea en el aire o en tierra será:',  options:['a) Incrementa el consumo de combustible y puede incrementar la potencia debido al calor','b) provocar daños en las mangueras conductoras de calor y deformación de los ventiladores de re','c) causa pérdida de potencia, consumo excesivo de aceite y posible daño interno permanente del'],correctAnswerIndex:2},
+        {question:'94 - (fig. 4) que color identifica el rango de operación normal de los flaps?',  options:['a) Arco amarillo','b) Arco verde','c) Arco blanco.'],correctAnswerIndex:2},
+        {question:'95 - En el hemisferio norte, la brújula magnética normalmente indica un viraje al oeste, esto es debido a:',  options:['a) Un viraje a la izquierda desde el rumbo norte','b) Un viraje a la derecha desde el rumbo norte','c) La aeronave es acelerada mientras vuela rumbo norte'],correctAnswerIndex:1},
+        {question:'96 - ¿Cuál es la altitud presión?',  options:['a) Es la altitud indicada, corregida por error de instalación y posición.','b) Es la altitud indicada cuando la presión barométrica está ajustado a 29.92','c) Es la altitud indicada corregida por temperatura no estándar y presión.'],correctAnswerIndex:1},
+        {question:'97 - ¿El sistema pitot provee presión de impacto para cual instrumentos?',  options:['a) Altímetro','b) VSI','c) Velocímetro'],correctAnswerIndex:2},
+        {question:'98 - ¿Qué condición hace que el altímetro indique una altitud menor que la altitud verdadera?',  options:['a) Temperatura del aire menor que la estándar','b) Presión atmosférica menor que la estándar','c) Temperatura del aire más caliente que la estándar'],correctAnswerIndex:2},
+        {question:'99 - ¿Cuál velocidad provee la mayor ganancia de altitud en la distancia más corta durante el ascenso, después del despegue?',  options:['a) V(Y)','b) V(A)','c) V(X)'],correctAnswerIndex:2},
+        {question:'100 - Desviación en una brújula magnética es causada por:',  options:['a) Presencia de flujos magnéticos en la brújula','b) Diferencia de lugar entre el norte verdadero y norte magnético','c) Campos magnéticos dentro de la aeronave que distorsionan las líneas de fuerza magnética.'],correctAnswerIndex:2},
+        {question:'101 - ¿En el hemisferio norte, la brújula magnética normalmente indicara un viraje al este?',  options:['a) La aeronave está desacelerando mientras vuela rumbo sur','b) La aeronave está acelerando mientras vuela rumbo norte','c) Un viraje a la izquierda es realizado volando rumbo norte'],correctAnswerIndex:2},
+        {question:'102 - (fig. 7) como el piloto determina el banqueo en el horizonte artificial como esta en la ilustración?',  options:['a) Por la dirección de la deflexión del banqueo (A)','b) Por la dirección de la deflexión de la barra del horizonte (B)','c) Por la relación del avión miniatura ( C) a la barra del horizonte deflectada (B)'],correctAnswerIndex:2},
+        {question:'103 - V(SO) se define como:',  options:['a) Velocidad de stall en configuración de aterrizaje','b) Velocidad de stall en configuración especifica','c) Velocidad de stall o velocidad mínima de despegue'],correctAnswerIndex:0},
+        {question:'104 - ¿Bajo que condición la altitud presión es igual a la altitud verdadera?',  options:['a) Cuando la presión está ajustada a 29.92 inHg','b) Cuando existen condiciones atmosféricas estándar','c) Cuando la altitud indicada es igual a la altitud presión'],correctAnswerIndex:1},
+        {question:'105 - (fig. 4) cual es el rango de precaución de la aeronave?',  options:['a) 0 a 60 kt','b) 100 a 165 kt','c) 165 a 208 kt'],correctAnswerIndex:2},
+        {question:'106 - ¿Si el tubo pitot y la toma estática se obstruyen, cuales instrumentos serán afectados?',  options:['a) El altímetro, velocímetro y el coordinador de viraje','b) Altímetro, velocímetro y VSI','c) Altímetro, horizonte artificial y coordinador de viraje.'],correctAnswerIndex:1},
+        {question:'107 - (fig. 5) que indicación provee el coordinador de viraje?',  options:['a) El movimiento de la aeronave con respecto al eje longitudinal y eje vertical','b) Angulo de banqueo sin exceder 30 grados','c) Actitud de la aeronave con respecto al eje longitudinal'],correctAnswerIndex:0},
+        {question:'108 - ¿Durante el vuelo, cuando la indicación de la brújula magnética es precisa?',  options:['a) Solamente en vuelo recto y nivelado con aceleración constante.','b) Cuando la velocidad es constante','c) En virajes no mayores a 18 grados'],correctAnswerIndex:0},
+        {question:'109 - ¿Que velocidad representa la velocidad máxima para la extensión del tren de aterrizaje?',  options:['a) V(LE)','b) V(LO)','c) V(FE)'],correctAnswerIndex:0},
+        {question:'110 - ¿Cuál es la altitud absoluta?',  options:['a) La altitud que se lee directamente del altímetro','b) La distancia vertical de la aeronave con respecto a la superficie','c) La altura sobre el standard datum plane.'],correctAnswerIndex:1},
+        {question:'111 - (fig. 3) cual(es) altímetro(s) indica(n) más de 10,000 ft?',  options:['a) 1, 2 y 3','b) 1 y 2 solamente','c) 1 solamente'],correctAnswerIndex:1},
+        {question:'112 - A que altitud el altímetro debería de ser ajustado a 29.92 inHg cuando se asciende a nivel de crucero?',  options:['a) 14,500 ft','b) 18,000 ft','c) 24,000 ft'],correctAnswerIndex:1},
+        {question:'113 - ¿Cuál es la altitud densidad?',  options:['a) La altura sobre el plano standard de la aeronave','b) La altitud presión corregida por temperatura no standard','c) La altitud que se lee directamente del instrumento.'],correctAnswerIndex:1},
+        {question:'114 - Si es necesario ajustar el altímetro de 29.15 a 29.85 in Hg, que cambio ocurre?',  options:['a) Incrementa 70 pies en la altitud indicada','b) Incrementa 70 pies en la altitud densidad','c) Incrementa 700 pies en la altitud indicada.'],correctAnswerIndex:2},
+        {question:'115 - Si un piloto cambia el reglaje altimétrico de 30.11 a 29.96, cual es el cambio aproximado en la indicación?',  options:['a) El altímetro indicara 0.15 inHg mas alto.','b) El altímetro indicara 150 pies más alto','c) El altímetro indicara 150 pies más bajo'],correctAnswerIndex:2},
+        {question:'116 - (fig. 82) el altímetro numero 3 está indicando la altitud para cual dirección?',  options:['a) 180-359 grados magnéticos','b) 179 grados verdaderos','c) 080 grados magnéticos'],correctAnswerIndex:2},
+        {question:'117 - ¿Cuál instrumento se vuelve inoperativo si el tubo pitot se obstruye?',  options:['a) Altímetro','b) VSI','c) Velocímetro'],correctAnswerIndex:2},
+        {question:'118 - el ajuste apropiado que se le realiza al horizonte artificial durante el vuelo recto y nivelado es para alinear:',  options:['a) Barra del horizonte a la indicación del nivel de vuelo','b) Barra del horizonte al avión miniatura','c) Avión miniatura a la barra del horizonte'],correctAnswerIndex:2},
+        {question:'119 - ¿Cuál velocidad representa la máxima extensión de los flaps?',  options:['a) V(FE)','b) V(LOF)','c) V(FC)'],correctAnswerIndex:0},
+        {question:'120 - ¿Cuál es la altitud verdadera?',  options:['a) La distancia vertical de la aeronave sobre el nivel del mar','b) La distancia vertical de la aeronave sobre la superficie','c) La altura sobre el standard datum plane.'],correctAnswerIndex:0},
+        {question:'121 - ¿Como se representa la velocidad de maniobra?',  options:['a) V(A)','b) V(LO)','c) V(NE)'],correctAnswerIndex:0},
+        {question:'122 - (fig. 4) cual es la máxima velocidad para extensión de flaps?',  options:['a) 65kt','b) 100kt','c) 165kt'],correctAnswerIndex:1},
+        {question:'123 - Después del despegue, ¿que velocidad debe usar el piloto para ganar la mayor altitud en un periodo de tiempo?',  options:['a) V(y)','b) V(x)','c) V(A)'],correctAnswerIndex:0},
+        {question:'124 - En el hemisferio norte, la brújula magnética normalmente indicara un viraje hacia el norte si:',  options:['a) La aeronave es desacelerada mientras está volando al rumbo este u oeste','b) Un viraje a la izquierda mientras se vuela al oeste','c) La aeronave es acelerada mientras se vuela al rumbo este o al oeste'],correctAnswerIndex:2},
+        {question:'125 - ¿Bajo que condición la altitud verdadera será más baja que la altitud indicada?',  options:['a) En temperatura más fría que el standard','b) En temperatura más cálida que la standard','c) Cuando la altitud densidad es más alta que la altitud indicada'],correctAnswerIndex:0},
+        {question:'126 - Si un vuelo se realiza de una área de baja presión a una área de alta presión, sin realizar el ajuste altimétrico, el altímetro mostrara:',  options:['a) La altitud actual sobre el nivel del mar','b) La altitud más alta que la actual sobre el nivel del mar','c) La altitud más baja que la actual sobre el nivel del mar.'],correctAnswerIndex:2},
+        {question:'127 - ¿Antes del despegue, el altímetro debe ajustarse a qué altitud o ajuste de altímetro?',  options:['a) el ajuste actual del altímetro local, si está disponible, o la elevación del aeropuerto de','b) La altitud densidad corregida del aeropuerto de salida','c) La altitud presión corregida para el aeropuerto de salida'],correctAnswerIndex:0},
+        {question:'128 - Si una aeronave vuela de un área de alta presión a una área de baja presión sin hacer la corrección de altímetro, que indicara el altímetro?',  options:['a) Altitud más baja que la altitud actual sobre el nivel del mar','b) Altitud más alta que la altitud actual sobre el nivel del mar','c) La altitud sobre el nivel del mar'],correctAnswerIndex:1},
+        {question:'129 - (fig. 4) que marca identifica la velocidad nunca a exceder?',  options:['a) Límite superior del arco verde','b) Límite superior del arco blanco','c) Línea roja'],correctAnswerIndex:2},
+        {question:'130 - ¿Si el ajuste del altímetro no está disponible antes del vuelo, cual altitud debería el piloto ajustar?',  options:['a) La elevación del aeropuerto más cercano, corregida al nivel del mar','b) La elevación del aeropuerto de salida','c) La altitud presión corregida por temperatura no estándar'],correctAnswerIndex:1},
+        {question:'131 - La diferencia angular entre el norte verdadero y el norte magnético es:',  options:['a) Desviación magnética','b) Variación magnética','c) Error de aceleración en la brújula'],correctAnswerIndex:1},
+        {question:'132 - Que velocidad es importante que no está codificada en los colores del velocímetro?',  options:['a) Velocidad nunca a exceder','b) Velocidad máxima estructural de crucero','c) Velocidad de maniobra'],correctAnswerIndex:2},
+        {question:'133 - (fig. 4) cual es el rango de operación con los flaps totalmente extendidos?',  options:['a) 55 a 100 kt','b) 55 a 208 kt','c) 55 a 165 kt'],correctAnswerIndex:0},
+        {question:'134 - El ajuste del altímetro es el valor de la presión barométrica:',  options:['a) Altitud calibrada a la elevación del campo','b) Altitud absoluta a la elevación del campo','c) Altitud verdadera a la elevación del campo'],correctAnswerIndex:2},
+        {question:'135 - (fig. 3) el altímetro 2 indica:',  options:['a) 1,500 ft','b) 4,500 ft','c) 14,500 ft'],correctAnswerIndex:2},
+        {question:'136 - ¿Cuál debería ser la indicación de la brújula magnética, si se gira con un viraje estándar a la derecha con rumbo sur en el hemisferio norte?',  options:['a) La brújula iniciara indicando un viraje a la izquierda','b) La brújula indicara un viraje a la derecha, más rápido que lo normal','c) La brújula se mantendrá al sur por un corto tiempo, gradualmente ira cambiando de rumbo con'],correctAnswerIndex:1},
+        {question:'137 - (fig. 6) para tener una indicación precisa durante el vuelo del indicador de rumbo, el instrumento debe de:',  options:['a) Ajustarse previo al vuelo en un rumbo conocido','b) Calibrarse con la brújula en intervalos regulares','c) Alinearse con la brújula magnética cada cierto tiempo'],correctAnswerIndex:2},
+        {question:'138 - En el hemisferio norte, la brújula magnética normalmente indicara un viraje inicial hacia el oeste cuando:',  options:['a) Un viraje a la izquierda es realizado con rumbo norte','b) Un viraje a la derecha es realizado con rumbo norte','c) La aeronave es acelerada mientras se está volando rumbo norte'],correctAnswerIndex:1},
+        {question:'139 - (fig. 3) altímetro 3 indica?',  options:['a) 9,500 ft','b) 10,950 ft','c) 15,940 ft'],correctAnswerIndex:0},
+        {question:'140 - (fig. 4) que color identifica la velocidad de stall en marcha mínima con los flaps y el tren de aterrizaje extendido en configuración de aterrizaje?',  options:['a) Límite superior del arco verde','b) Límite superior del arco blanco','c) Límite inferior del arco blanco.'],correctAnswerIndex:2},
+        {question:'141 - ¿Que representa la línea roja en el indicador de velocidad?',  options:['a) Velocidad de maniobra','b) Velocidad de turbulencia','c) Velocidad nunca a exceder'],correctAnswerIndex:2},
+        {question:'142 - (fig. 4) Cual color identifica la velocidad de stall sin potencia en una configuración especifica?',  options:['a) El límite superior del arco verde','b) Límite superior del arco blanco','c) Límite inferior del arco verde.'],correctAnswerIndex:2},
+        {question:'143 - V(NO) es definido como:',  options:['a) Rango de operación normal','b) Velocidad a nunca exceder','c) Velocidad máxima estructural de crucero'],correctAnswerIndex:2},
+        {question:'144 - ¿Como las variaciones de temperatura afectan el altímetro?',  options:['a) La presión aumenta en días cálidos y la altitud indicada es más baja que la altitud verdade','b) Altas temperaturas aumentan la presión y la altitud indicada es mayor que la altitud verdade','c) Bajas temperaturas bajan la presión y la altitud indicada es menor que la altitud verdadera'],correctAnswerIndex:0},
+        {question:'145 - La máxima velocidad a la cual una aeronave puede ser operada en viento calmo es:',  options:['a) 100kt','b) 165kt','c) 208kt'],correctAnswerIndex:2},
+        {question:'146 - (fig. 3) El altímetro 1 indica:',  options:['a) 500ft','b) 1500 ft','c) 10,500 ft'],correctAnswerIndex:2},
+        {question:'147 - ¿Bajo que condición la altitud presión y la altitud densidad tienen el mismo valor?',  options:['a) Al nivel del mar, cuando la temperatura es de 0F','b) Cuando el altímetro no tiene error de instalación','c) A la temperatura standard'],correctAnswerIndex:2},
+        {question:'148 - (fig. 4) cual es la velocidad máxima estructural de crucero?',  options:['a) 100kt','b) 165kt','c) 208kt'],correctAnswerIndex:1},
+        {question:'149 - El error de desviación de una brújula magnética es ocasionado por:',  options:['a) Un error virando al rumbo norte','b) Metales y sistema eléctrico dentro de la aeronave','c) La diferencia entre el norte verdadero y el magnético'],correctAnswerIndex:1},
+        {question:'150 - La desviación en una brújula magnética es causada por:',  options:['a) presencia de defectos en los imanes permanentes de la brújula','b) diferencia del norte verdadero y el norte magnético','c) campos magnéticos dentro de la aeronave afectando las líneas magnéticas.'],correctAnswerIndex:2},
+        {question:'151 - ¿En el hemisferio norte la brújula magnética normalmente indicara un viraje hacia el sur cuándo?',  options:['a) Un viraje a la izquierda es realizado con rumbo este','b) Un viraje a la derecha es realizado con rumbo oeste','c) La aeronave está desacelerando mientras vuela con rumbo oeste.'],correctAnswerIndex:2},
+        {question:'152 - En el hemisferio norte si una aeronave es acelerada o desacelerada, la brújula magnética indicara normalmente:',  options:['a) Un viraje momentáneo','b) Correctamente cuando esta al norte o al sur','c) Un viraje hacia el sur'],correctAnswerIndex:1},
+        {question:'153 - (fig. 21, área 2) cual es la frecuencia del CTAF/UNICOM para el aeropuerto de Garrison?',  options:['a) 122.8 MHz','b) 122.9 MHz','c) 123.0 MHz'],correctAnswerIndex:1},
+        {question:'154 - ¿Que espacio aéreo requiere ADS-B?',  options:['a) Aterrizar en un aeropuerto con torre de control','b) Sobrevolar espacio aéreo C debajo de 10,000 ft MSL','c) Volar debajo del espacio aéreo clase C'],correctAnswerIndex:1},
+        {question:'155 - Para operaciones de aeronaves en espacios aéreos clase C, con un transponder inoperativo ADS-B el ATC debe solicitarlo:',  options:['a) Al menos una hora antes de la operación','b) Todo el tiempo','c) 24 horas antes de la operación'],correctAnswerIndex:1},
+        {question:'156 - ¿Cuál es la señal luminosa que la torre de control utiliza para autorizar al piloto a iniciar el taxeo?',  options:['a) Verde intermitente','b) Verde fija','c) Blanca intermitente'],correctAnswerIndex:0},
+        {question:'157 - La ausencia de las condiciones del cielo y la visibilidad en el ATIS indica que:',  options:['a) Condiciones del clima que están en o arriba de los mínimos VFR','b) Condiciones del cielo está despejado y la visibilidad sin restricciones','c) El techo de nubes es al menos 5,000 ft y la visibilidad es 5 millas o más.'],correctAnswerIndex:2},
+        {question:'158 - ¿Cuál es el servicio básico que proporciona el Radar?',  options:['a) Alertas de seguridad, alertas de tráfico, vectores para aeronaves en VFR','b) El radar es obligatorio por el sistema ARTS','c) Advertencia de wind- shear en el aeropuerto'],correctAnswerIndex:0},
+        {question:'159 - La señal luminosa roja y verde alternando, desde la torre de control a una aeronave en vuelo es señal de:',  options:['a) Mantener posición','b) Ejerza extrema precaución','c) No aterrice, aeropuerto no seguro'],correctAnswerIndex:1},
+        {question:'160 - (fig. 51) que información debería ser anotada en la casilla 15, en el plan de vuelo?',  options:['a) Altitud de crucero VFR','b) Techo de servicio de la aeronave','c) Centro de gravedad de la aeronave'],correctAnswerIndex:0},
+        {question:'161 - Una práctica estándar, todos los tráficos que ingresan a un aeropuerto sin torre de control deberían monitorear el aeropuerto a una distancia de:',  options:['a) 25 NM','b) 20 NM','c) 10 NM'],correctAnswerIndex:2},
+        {question:'162 - ¿Cuándo se opera el transponder con código 1200, cual es el mínimo modo en el cual debe estar el transponder?',  options:['a) Modo A','b) Modo C','c) Modo F'],correctAnswerIndex:0},
+        {question:'163 - ¿Cuál es la señal luminosa de la torre de control para autorizar al piloto el carreteo?',  options:['a) Verde intermitente','b) Verde fija','c) Blanca intermitente'],correctAnswerIndex:0},
+        {question:'164 - ¿Qué procedimiento es recomendado para asegurar que el ELT no ha sido activado?',  options:['a) Apagar el ELT después del aterrizaje','b) Consultar a la torre de control si ha recibido señal de ELT','c) Monitorear 121.5 antes de apagar el motor de la aeronave'],correctAnswerIndex:2},
+        {question:'165 - ¿Si los radios de la aeronave fallan, cual es el procedimiento correcto cuando se aterriza en un aeropuerto controlado?',  options:['a) Observar el flujo del tráfico, ingresar al patrón y esperar las luces de la torre de contro','b) Incorporarse al patrón de tráfico con el viento y alabear las alas.','c) Usar las luces de aterrizaje y extender y retraer el tren de aterrizaje, mientras circula e'],correctAnswerIndex:0},
+        {question:'166 - Si el controlador de la frecuencia de superficie le indica que carretea a la pista 09, el piloto debe de:',  options:['a) Por las calles de rodaje y cruzar la pista, pero no en la pista 09','b) Carretear a la siguiente intersección de la pista y esperar autorización si es requerido','c) Por las calles de rodaje cruzando la pista activa, hasta llegar a la pista 09, donde un des'],correctAnswerIndex:1},
+        {question:'167 - El ATC brinda la siguiente información al piloto que está volando rumbo 090: Trafico a las 3 de su posición con rumbo oeste. ¿Dónde debería buscarlo el piloto?',  options:['a) Este','b) Sur','c) Oeste'],correctAnswerIndex:1},
+        {question:'168 - ¿Cuándo el controlador utiliza el radar para dar información de tráfico en relación a las 12 horas del reloj, que referencia usa el controlador?',  options:['a) Curso verdadero','b) Ground track','c) Rumbo magnético'],correctAnswerIndex:1},
+        {question:'169 - ¿Cuándo las baterías deben de ser reemplazadas en un ELT?',  options:['a) Cada 24 meses','b) Cuando el 50% de vida útil expira','c) Cada inspección de 100 horas'],correctAnswerIndex:1},
+        {question:'170 - El servicio TRSA en el programa radar de estación provee:',  options:['a) Separación IFR (1000 ft vertical y 3 NM lateral) entre todas las aeronaves','b) Notifica a los pilotos cuando la aeronave esta en área no segura, cerca al terreno, obstrucc','c) Separación y secuencia para aeronaves en condiciones VFR'],correctAnswerIndex:2},
+        {question:'171 - ¿Como practica estándar, todas las aeronaves aproximando a un aeropuerto sin torre de control debería continuamente monitorear el aeropuerto desde una distancia de?:',  options:['a) 25 NM','b) 20 NM','c) 10NM'],correctAnswerIndex:2},
+        {question:'172 - Mientras esta en aproximación final para aterrizar, una luz intermitente entre verde y roja, seguida de una luz intermitente roja, es recibida desde la torre de control. ¿Bajo esas circunstancias, el piloto debe de?',  options:['a) Cancelar la aproximación, volar el patrón de trafico de nuevo y aterrizar','b) Ejercer extrema precaución y abandonar la aproximación, el aeropuerto no es seguro para ater','c) Abandonar la aproximación, circular el aeropuerto a la derecha y esperar la luz blanca que'],correctAnswerIndex:1},
+        {question:'173 - ¿Qué tipo de equipo de ADS-B es requerido para operar una aeronave debajo de 18,000 ft MSL cuando se está volando en espacio aéreo C?',  options:['a) 1090-ES','b) Universal Access Transceiver','c) 1090-ES or Universal Access Transceiver'],correctAnswerIndex:2},
+        {question:'174 - (fig. 25, área 2) La frecuencia de torre de control del aeropuerto Addison es:',  options:['a) 122.95 MHz','b) 126.0 MHz','c) 133.4 MHz'],correctAnswerIndex:1},
+        {question:'175 - ¿Después del aterrizaje en un aeropuerto con torre de control, cuando debe el piloto cambiar a la frecuencia de superficie?',  options:['a) Cuando el controlador le indique que debe hacerlo','b) Al salir de la pista activa','c) Llegando a la calle de taxeo.'],correctAnswerIndex:0},
+        {question:'176 - ¿Cuando se selecciona los códigos transponder, cual código debe de evitar usar?',  options:['a) 7200','b) 7400','c) 7500'],correctAnswerIndex:2},
+        {question:'177 - Luz verde intermitente desde la torre de control a la aeronave en vuelo, es una señal para que el piloto realice:',  options:['a) Autorizado a aterrizar','b) Ceder el paso a otras aeronaves','c) Regresar para aterrizar'],correctAnswerIndex:0},
+        {question:'178 - (fig. 25, área 2) cual es la frecuencia de la torre de control del aeropuerto Addison?',  options:['a) 122.95','b) 126.0','c) 133.4'],correctAnswerIndex:1},
+        {question:'179 - Cuando el ATC tiene información de radar en relación con las 12 horas del reloj, la referencia del controlador es debido a la aeronave:',  options:['a) Curso verdadero','b) Curso terrestre','c) Rumbo magnético'],correctAnswerIndex:1},
+        {question:'180 - Cada piloto operando una aeronave equipada con transponder ADS-B debe operar este equipo en:',  options:['a) En modo transito todo el tiempo','b) Cuando vuela en espacio aéreo controlado','c) Todo el tiempo en y arriba de 10,000 ft MSL'],correctAnswerIndex:0},
+        {question:'181 - ¿Cuándo está activado el ELT transmite en que frecuencia?',  options:['a) 118.0 MHz','b) 406 MHz','c) 123.0 MHz'],correctAnswerIndex:1},
+        {question:'182 - Si la torre de control usa la señal luminosa para guiar al piloto a ceder el paso a otra aeronave y que continué circulando, la luz debería de ser:',  options:['a) Roja intermitente','b) Roja fija','c) Alternando roja y verde'],correctAnswerIndex:1},
+        {question:'183 - ¿Cuándo los pilotos deberían de mantener su posición en el aeropuerto mientras contactan a la torre de control?',  options:['a) Cuando la visibilidad es menor a 1NM','b) Cuando las pistas paralelas están en uso','c) Cuando está saliendo de una intersección de la pista'],correctAnswerIndex:2},
+        {question:'184 - Servicio de TRSA en el Radar Terminal provee:',  options:['a) Separación IFR (1000ft vertical y 3 NM lateral) entre las aeronaves','b) Notifica a los pilotos cuando se aproximan al terreno, obstrucciones y otras aeronaves','c) Secuencia y separación a las aeronaves que están volando en condiciones VFR'],correctAnswerIndex:2},
+        {question:'185 - (fig. 20, área 3) cual es el procedimiento de comunicaciones recomendado para aterrizar en Currituck County Airport?',  options:['a) Transmitir intenciones en 122.9 MHz con 10 millas de anticipación y brindar reportes de pos','b) Contactar Elizabeth city FSS para servicio de aeropuerto','c) Contactar New Bern FSS para información de área'],correctAnswerIndex:0},
+        {question:'186 - ¿En cuál espacio aéreo es requerido el uso del transponder con 4096 códigos?',  options:['a) Clase A, Clase B, Clase C','b) Clase D y Clase E (por debajo de los 10,000 pies MSL)','c) Clase D y Clase G ( por debajo de los 10,000 pies MSL)'],correctAnswerIndex:0},
+        {question:'187 - (fig. 22, área 2 y figura 31) cual es la frecuencia correcta del UNICOM a ser usada en Coeur D´Alene para solicitar combustible?',  options:['a) 135.075 MHz','b) 122.1/108.8 MHz','c) 122.8 MHz'],correctAnswerIndex:2},
+        {question:'188 - ¿Cuál es el código transponder VFR?',  options:['a) 1200','b) 7600','c) 7700'],correctAnswerIndex:0},
+        {question:'189 - ¿Cuándo un ELT debe de ser probado?',  options:['a) Todo el tiempo','b) Cada 15 y 45 minutos','c) Durante los primeros 5 minutos después de la hora.'],correctAnswerIndex:2},
+        {question:'190 - ¿Qué señal luminosa de la torre de control, autoriza al piloto para el carreteo?',  options:['a) Verde intermitente','b) Verde fija','c) Blanca intermitente'],correctAnswerIndex:0},
+        {question:'191 - ¿Cuántos satélites son requeridos para obtener una posición tridimensional (latitud, longitud, altitud) y tiempo?',  options:['a) 5','b) 6','c) 4'],correctAnswerIndex:2},
+        {question:'192 - ¿Cuál procedimiento es el recomendado cuando asciende o desciende en condiciones VFR en una aerovía?',  options:['a) Realizar banqueos suaves, izquierda y derecha para mantener condiciones visuales en el espa','b) Notificar al FSS más cercano de los cambios de altitud','c) Volar lejos de la aerovía, antes de cambiar de altitud'],correctAnswerIndex:0},
+        {question:'193 - (fig. 21) que curso debería de seleccionarse en el OBS para realizar un vuelo directo desde Mercer Airport (área 3) hacia el VORTAC minot (área 1) con una indicación TO?',  options:['a) 001 grados','b) 359 grados','c) 179 grados'],correctAnswerIndex:1},
+        {question:'194 - (fig. 24) que curso debería el VOR estar ajustado para navegar directamente del aeropuerto MAJORS (área 1) hacia el VOR-DME Quitman (área 2)',  options:['a) 101 grados','b) 108 grados','c) 281 grados'],correctAnswerIndex:0},
+        {question:'195 - Si el RAIM se pierde en vuelo:',  options:['a) El piloto debe creer en la indicación del GPS','b) El piloto no tiene la precisión de la posición del GPS','c) La posición del GPS es confiable si al menos 3 satélites están disponibles.'],correctAnswerIndex:1},
+        {question:'196 - (fig. 28, ilustración 7) el receptor VOR tiene las indicaciones mostradas, cual es la posición de la aeronave con relación a la estación?',  options:['a) Este','b) Sur este','c) Oeste'],correctAnswerIndex:1},
+        {question:'197 - (fig. 25, área 5) cual es la radio ayuda para la navegación del aeropuerto de Dallas-Ft. Worth international?',  options:['a) VOR','b) VORTAC','c) VOR/DME'],correctAnswerIndex:2},
+        {question:'198 - ¿Cuál altitud de crucero es apropiada para volar sobre 3,000ft AGL en un rumbo magnético de 185 grados?',  options:['a) 4,000 ft','b) 4,500 ft','c) 5,000 ft'],correctAnswerIndex:1},
+        {question:'199 - ¿Cuál altitud de crucero es apropiada para un vuelo VFR con un rumbo magnético de 135 grados?',  options:['a) Pares','b) Pares más quinientos','c) Impares más quinientos'],correctAnswerIndex:2},
+        {question:'200 - como piloto al mando de una aeronave, bajo qué situación se puede desviar de una indicación del ATC?',  options:['a) Cuando se opera en espacio aéreo clase A durante la noche','b) Si la indicación del ATC no se entiende y está en condiciones VFR','c) En respuesta a una alerta de tráfico del sistema de anticolisión.'],correctAnswerIndex:2},
+        {question:'201 - ¿Cuál es la definición de una aeronave de alto rendimiento?',  options:['a) Aeronave con un motor de más de 200 HP','b) Aeronave con 180 HP, tren retráctil, flaps y hélice de paso fijo.','c) Aeronave con velocidad de crucero de 200 Kt'],correctAnswerIndex:0},
+        {question:'202 - Ninguna persona puede operar una aeronave en espacio aéreo clase D durante la noche a menos que:',  options:['a) El vuelo pueda realizarse 500 ft por debajo de las nubes','b) La aeronave debe estar equipada para vuelos IFR','c) La visibilidad es al menos 3 millas'],correctAnswerIndex:1},
+        {question:'203 - Ninguna persona puede actuar como miembro de una tripulación de vuelo si ha consumido bebidas alcohólicas dentro de:',  options:['a) 8 horas','b) 12 horas','c) 24 horas'],correctAnswerIndex:0},
+        {question:'204 - ¿Cuáles son los requerimientos mínimos para operar una aeronave en condiciones VFR en espacio aéreo clase D durante la noche?',  options:['a) La aeronave debe de estar bajo vigilancia del radar todo el tiempo','b) La aeronave debe estar equipada para condiciones IFR con transponder que reporte altitud','c) El piloto debe de poseer la habilitación de instrumentos y la aeronave debe de poseer equip'],correctAnswerIndex:2},
+        {question:'205 - Los tres toques y despegues que son requeridos para actuar como piloto al mando durante la noche deben ser en el periodo de tiempo:',  options:['a) Puesta del sol al amanecer','b) Una hora después de la puesta del sol hasta una hora antes del amanecer','c) del final del crepúsculo civil vespertino al comienzo del crepúsculo civil matutino'],correctAnswerIndex:1},
+        {question:'206 - ¿En qué condiciones pueden ser lanzados objetos desde una aeronave?',  options:['a) Solamente en emergencia','b) Para evitar daños a personas o propiedades en la superficie, con la debida precaución.','c) Si se tiene permiso de la autoridad competente.'],correctAnswerIndex:1},
+        {question:'207 - El piloto al mando de una aeronave que requiere tener una habilitación de tipo:',  options:['a) Aeronaves operadas bajo autorización del administrador','b) Aeronaves con peso mayor de 12,500 libras','c) Aeronaves que se utilizan en vuelos ferry, vuelos de entrenamiento o vuelos de prueba.'],correctAnswerIndex:1},
+        {question:'208 - Si un piloto con Licencia Privada actúa como piloto al mando de una aeronave de alto rendimiento, ese piloto debe tener:',  options:['a) Aprobar un examen en esa aeronave por parte de la AAC','b) Mostrar su bitácora que el competente en esa aeronave.','c) Recibir instrucción en tierra y en vuelo por un instructor autorizado en ese tipo de aerona'],correctAnswerIndex:2},
+        {question:'209 - ¿Cuál aeronave tiene el derecho de paso sobre los demás tráficos?',  options:['a) Globo','b) Aeronave en emergencia','c) Aeronave en aproximación final'],correctAnswerIndex:1},
+        {question:'210 - ¿Quién puede desarrollar un mantenimiento preventivo en una aeronave y aprobar su retorno a operación?',  options:['a) Estudiantes y pilotos recreativos','b) Piloto privado o comercial','c) Ninguno de los anteriores'],correctAnswerIndex:1},
+        {question:'211 - Las instrucciones pre-vuelo sobre el uso de los cinturones de seguridad es la responsabilidad de:',  options:['a) Todos los pasajeros','b) Piloto al mando','c) Primer oficial'],correctAnswerIndex:1},
+        {question:'212 - ¿Cuándo dos o más aeronaves se están aproximando al aeropuerto con el propósito de aterrizar, quien tiene el derecho?',  options:['a) La que tiene la aeronave a su derecha','b) La que es menos maniobrable','c) La aeronave que está a menor altitud, pero sin tomar ventaja de esta regla'],correctAnswerIndex:2},
+        {question:'213 - ¿Cuál es el requerimiento de combustible específico para volar bajo condiciones VFR durante el día?',  options:['a) Suficiente para completar el vuelo a una velocidad de crucero normal en condiciones adversa','b) Suficiente para volar al primer punto que se pretende aterrizar y para volar después por 30','c) Suficiente para volar al primer punto que se pretende aterrizar y volar por 45 minutos en v'],correctAnswerIndex:1},
+        {question:'214 - Una autorización del ATC provee:',  options:['a) Prioridad sobre todos los tráficos','b) Separación de los tráficos','c) Autorización para proceder en condiciones de tráficos específicos en espacio aéreo controla'],correctAnswerIndex:2},
+        {question:'215 - ¿Qué documento debe de portar el piloto al mando o ser claramente visible en la aeronave mientras se está operando como piloto al mando?',  options:['a) Certificados que muestren el cumplimiento de la aeronave y el vuelo','b) Certificado del piloto mostrando el cumplimiento de su chequeo anual y la bitácora mostrando','c) Un apropiado certificado médico y licencia.'],correctAnswerIndex:2},
+        {question:'216 - ¿Cuál es la visibilidad mínima y libre de nubes que es requerida para operaciones VFR en espacio aéreo clase G a 700 ft AGL o por debajo durante el día?',  options:['a) 1 milla de visibilidad y libre de nubes','b) 1 milla de visibilidad, 500 ft por debajo, 1000ft arriba y 2000, ft horizontal, libre de nub','c) 3 millas de visibilidad y libre de nubes'],correctAnswerIndex:0},
+        {question:'217 - ¿Puede un piloto operar una aeronave que no cumple con la directiva de aeronavegabilidad (AD)?',  options:['a) Si, solo en condiciones VFR','b) Si, las AD´s son voluntarias','c) Si, si es permitido por la AD.'],correctAnswerIndex:2},
+        {question:'218 - La responsabilidad que asegura que una aeronave ha tenido el mantenimiento correcto y está en condiciones aeronavegables es de:',  options:['a) Piloto al mando','b) Propietario u operador','c) Mecánico que realiza el trabajo'],correctAnswerIndex:1},
+        {question:'219 - Como experiencia reciente, para actuar como piloto al mando de una aeronave que transporta pasajeros durante la noche, el piloto debe de tener por lo menos tres despegues y tres aterrizajes dentro de los 90 días precedentes:',  options:['a) La misma categoría de aeronave y clase a ser usada','b) El mismo tipo de aeronave a ser usada','c) Cualquier aeronave'],correctAnswerIndex:0},
+        {question:'220 - Ninguna persona puede operar una aeronave en vuelo de formación:',  options:['a) Sobre un área densamente poblada','b) En espacio aéreo clase D','c) Excepto si previamente se han coordinado los pilotos al mando de cada aeronave.'],correctAnswerIndex:2},
+        {question:'221 - Ninguna persona puede utilizar un transponder a menos que este ha sido probado e inspeccionado dentro de los precedentes:',  options:['a) 6 meses calendarios','b) 12 meses calendarios','c) 24 meses calendarios'],correctAnswerIndex:2},
+        {question:'222 - ¿Cuándo se vuela en espacio aéreo clase B, cual es la velocidad máxima autorizada?',  options:['a) 200 Kt','b) 230 Kt','c) 250 Kt'],correctAnswerIndex:0},
+        {question:'223 - Para actuar como piloto al mando de una aeronave transportando pasajeros, el piloto debe haber realizado tres despegues y tres aterrizajes dentro de los 90 días precedentes en una aeronave de la misma:',  options:['a) Marca y modelo','b) Categoría, clase pero no tipo','c) Categoría, clase y tipo, si es necesaria la habilitación de tipo.'],correctAnswerIndex:2},
+        {question:'224 - ¿Con respecto a los pasajeros, que obligación si existiera, les corresponde a los pilotos el uso de los cinturones de seguridad?',  options:['a) El piloto al mando debe instruir a los pasajeros mantener los cinturones de seguridad duran','b) El piloto al mando debe instruir a los pasajeros el uso de los cinturones de seguridad y not','c) El piloto al mando no tiene obligación de instruir a los pasajeros al uso del cinturón de s'],correctAnswerIndex:1},
+        {question:'225 - Ninguna persona puede operar una aeronave o actuar como piloto al mando de una aeronave civil con:',  options:['a) .008 porciento de alcohol en la sangre','b) .004 porciento de alcohol en la sangre','c) .04 porciento de alcohol en la sangre'],correctAnswerIndex:2},
+        {question:'226 - ¿Dónde se encuentras las limitaciones de operación de una aeronave?',  options:['a) En el certificado de aeronavegabilidad','b) En el manual aprobado y actualizado, marcas y placas de la aeronave.','c) En el fuselaje de la aeronave y la bitácora de motor.'],correctAnswerIndex:1},
+        {question:'227 - ¿Con respecto a la certificación, cuáles son las clases de aeronaves?',  options:['a) Aeronave, helicóptero, planeador','b) Monomotor terrestre y acuático, multimotor terrestre y acuático','c) Planeador, globo, globo a gas'],correctAnswerIndex:1},
+        {question:'228 - ¿Cuál es la visibilidad mínima de vuelo requerida para operaciones VFR en aerovías debajo de 10,000ft MSL?',  options:['a) 1 milla','b) 3 millas','c) 4 millas'],correctAnswerIndex:1},
+        {question:'229 - ¿Excepto cuando sea necesario para aterrizar y despegar, cual es la altitud mínima segura requerida por un piloto para operar una aeronave sobre áreas congestionadas?',  options:['a) Una altitud de 1000ft sobre personas, vehículos o estructuras','b) Una altitud de 500ft sobre el obstáculo más alto con un radio de 1000ft desde la aeronave','c) Una altitud de 1000ft sobre el obstáculo más alto dentro de un radio horizontal de 2000 ft'],correctAnswerIndex:2},
+        {question:'230 - ¿Cuál altitud de crucero VFR es apropiada cuando se vuela a 3,000 ft AGL en un curso magnético de 185 grados?',  options:['a) 4,000 ft','b) 4,500 ft','c) 5,000 ft'],correctAnswerIndex:1},
+        {question:'231 - Durante operaciones fuera de espacios aéreos controlados en altitudes de más de 1200ft AGL, pero menos de 10,000ft MSL, la visibilidad mínima para vuelos VFR es:',  options:['a) 1 milla','b) 3 millas','c) 5 millas'],correctAnswerIndex:0},
+        {question:'232 - ¿Cuál acción prevuelo debe realizar el piloto antes de cada vuelo?',  options:['a) Revisar la bitácora de la aeronave','b) Familiarizarse con toda la información disponible relacionada al vuelo','c) Revisar el clima'],correctAnswerIndex:1},
+        {question:'233 - Para operaciones de piloto privado, un certificado médico clase 1, emitido a un piloto de 23 años en octubre 21, del presente año, ¿este expirara en qué fecha?',  options:['a) Octubre 21, 2 años después','b) Octubre 31, siguiente año','c) Octubre 31, 5 años después'],correctAnswerIndex:2},
+        {question:'234 - ¿Qué acción, si hubiera, es apropiada si el piloto se desvía de las instrucciones del ATC durante una emergencia donde se le ha dado prioridad?',  options:['a) No hay acción a tomar si es el piloto al mando','b) Llenar un reporte detallado, dentro de las 48 horas para el ATC si es solicitado.','c) Llenar un reporte al administrador de la AAC, lo más pronto posible'],correctAnswerIndex:1},
+        {question:'235 - Aparte del certificado de aeronavegabilidad, ¿qué otros documentos deben estar a bordo de la aeronave?',  options:['a) Bitácora de motor y fuselaje, manual del propietario','b) Permiso de radio operador, hojas de reparación y alteración','c) Limitaciones de operación y certificado de registro.'],correctAnswerIndex:2},
+        {question:'236 - La distancia mínima entre nubes requerida para operaciones VFR en una aerovía por debajo de los 10,000ft MSL es:',  options:['a) Mantener libre de nubes','b) 500ft abajo, 1000ft arriba y 2000ft horizontal','c) 500ft arriba, 1,000ft abajo y 2000ft horizontal'],correctAnswerIndex:1},
+        {question:'237 - ¿Excepto cuando sea necesario para despegues y aterrizajes, cual es la altitud mínima para que un piloto opera una aeronave?',  options:['a) Una altitud que permita que si el motor falla, un aterrizaje de emergencia pueda realizarse','b) Una altitud de 500 ft sobre la superficie y no cerca de personas, vehículos o edificios','c) Una altitud de 500ft sobre el obstáculo más alto con un radio horizontal de 1000 ft'],correctAnswerIndex:0},
+        {question:'238 - Con respecto a la certificación de una aeronave, ¿cuál es la clase de aeronaves?',  options:['a) Avión, helicóptero, planeador, globo','b) Normal, utilitario, acrobático, limitado','c) Transporte, restringido, provisional.'],correctAnswerIndex:0},
+        {question:'239 - ¿A menos que autorice el ATC, cual es la velocidad máxima que puede operar una aeronave debajo de 10,000 ft MSL?',  options:['a) 200 Kt','b) 250 Kt','c) 288 Kt'],correctAnswerIndex:1},
+        {question:'240 - Para actuar como piloto al mando de una aeronave de alto rendimiento, el piloto debe de poseer:',  options:['a) Haber realizado tres despegues y tres aterrizajes en la aeronave de alto rendimiento','b) Haber realizado un examen en una aeronave de alto rendimiento','c) Haber recibido instrucción teórica y en vuelo de esa aeronave de más de 200 HP'],correctAnswerIndex:2},
+        {question:'241 - que debe saber el dueño o el operador de una aeronave acerca de las directivas de aeronavegabilidad (AD´s)?',  options:['a) Son de carácter informativo','b) Son mandatorias','c) Son voluntarias'],correctAnswerIndex:1},
+        {question:'242 - ¿Qué es prohibido cuando se opera una aeronave civil?',  options:['a) Volar en condiciones IMC','b) Volar sobre área densamente poblada','c) Volar dentro de espacio aéreo clase D'],correctAnswerIndex:1},
+        {question:'243 - ¿Cuál es la visibilidad mínima para operaciones en condiciones VFR en una aerovía por debajo de los 10,000 ft MSL?',  options:['a) 1 milla','b) 3 millas','c) 4 millas'],correctAnswerIndex:1},
+        {question:'244 - ¿Qué debería saber el dueño o el operador de una aeronave sobre las directivas de aeronavegabilidad (AD´s)?',  options:['a) Son de carácter informativo','b) Son de carácter mandatorio','c) Son voluntarias'],correctAnswerIndex:1},
+        {question:'245 - Vuelo VFR en espacio aéreo controlado, arriba de 1,200ft AGL y por debajo de 10,000 ft MSL, requiere una visibilidad mínima y libre de nubes de:',  options:['a) 3 millas y 500 ft por debajo o 1000 ft arriba de las nubes en espacio aéreo controlado','b) 5 millas y 1000ft por debajo o 1000 ft arriba de las nubes en todas las altitudes','c) 5 millas y 1000 ft por debajo o 1000 ft arriba de las nubes solo en espacio aéreo clase A.'],correctAnswerIndex:0},
+        {question:'246 - ¿Tu primo quiere que lo lleves a volar, tú deberías haber completado al menos tres despegues y tres aterrizajes en tu aeronave dentro de los             días precedentes?',  options:['a) 90 días','b) 60 días','c) 30 días'],correctAnswerIndex:0},
+        {question:'247 - Cuál es la velocidad máxima a la cual una aeronave puede volar por debajo de 2,500 ft AGL y dentro de 4NM',  options:['a) 200Kt','b) 230Kt','c) 250kt'],correctAnswerIndex:0},
+        {question:'248 - El tipo más frecuente de inversión de temperatura basada en el suelo o la superficie es la producida por:',  options:['a) Radiación terrestre en una noche clara y relativamente tranquila','b) aire caliente que se eleva rápidamente en las proximidades de un terreno montañoso','c) el movimiento de aire más frío bajo aire caliente, o el movimiento de aire caliente sobre ai'],correctAnswerIndex:0},
+        {question:'249 - Qué condiciones resultan en la formación de escarcha.',  options:['a) la temperatura de la superficie es igual o inferior al punto de congelamiento cuando pequeña','b) la temperatura de la superficie colectora es igual o inferior al punto de rocío del aire ady','c) la temperatura del aire circundante es igual o inferior al punto de congelación cuando peque'],correctAnswerIndex:1},
+        {question:'250 - una condición en vuelo necesaria para que se dé la formación de hielo estructural es?',  options:['a) Baja temperatura y punto de rocío','b) Nubes estratiformes','c) Humedad visible'],correctAnswerIndex:2},
+        {question:'251 - ¿Qué fenómeno meteorológico siempre está asociado con una tormenta eléctrica?',  options:['a) Relámpago','b) Lluvia fuerte','c) Granizo'],correctAnswerIndex:0},
+        {question:'252 - Todo proceso físico del clima va acompañado o es el resultado de una:',  options:['a) Movimiento del aire','b) Diferencia de presión','c) Intercambio de calor'],correctAnswerIndex:2},
+        {question:'253 - cuando hay una inversión de temperatura, esperaría experimentar:',  options:['a) nubes con un extenso desarrollo vertical sobre una inversión en el aire','b) buena visibilidad en los niveles más bajos de la atmósfera y mala visibilidad por encima de','c) un aumento de la temperatura a medida que aumenta la altitud'],correctAnswerIndex:2},
+        {question:'254 - cual es una característica de aire inestable?',  options:['a) Turbulencia y buena visibilidad en la superficie','b) Turbulencia y poca visibilidad en la superficie','c) Nubes nimbostratus y buen visibilidad en la superficie'],correctAnswerIndex:0},
+        {question:'255 - las condiciones necesarias para la formación de nubes cumulonimbus son una acción de elevación y:',  options:['a) aire inestable que contiene un exceso de núcleos de condensación','b) aire húmedo inestable','c) ya sea aire estable o inestable'],correctAnswerIndex:1},
+        {question:'256 - la etapa madura de una tormenta comienza con:',  options:['a) formación de la parte superior del yunque','b) el inicio de la precipitación','c) corrientes descendentes continuas'],correctAnswerIndex:1},
+        {question:'257 - ¿Por qué la escarcha se considera peligrosa para volar?',  options:['a) la escarcha cambia la forma aerodinámica básica de las aspas aerodinámicas, aumentando así l','b) la escarcha ralentiza el flujo de aire sobre las aspas aerodinámicas, lo que aumenta la efec','c) la escarcha estropea el suave flujo de aire sobre las alas, lo que reduce la capacidad de el'],correctAnswerIndex:2},
+        {question:'258 - durante el ciclo de vida de una tormenta, ¿qué etapa se caracteriza predominantemente por corrientes descendentes?',  options:['a) Cumulus','b) Disipación','c) Madura'],correctAnswerIndex:1},
+        {question:'259 - Si la dispersión del punto de rocío/temperatura es pequeña y está disminuyendo, y la temperatura es de 62 ° F, ¿qué tipo de clima es más probable que se desarrolle?',  options:['a) precipitación helada','b) tormentas','c) niebla o nubes bajas'],correctAnswerIndex:2},
+        {question:'260 - una nube en forma de almendra o lente que parece estacionaria, pero que puede contener vientos de 50 nudos o más, se denomina?',  options:['a) una nube frontal inactiva','b) nube en forma de embudo','c) nube lenticular'],correctAnswerIndex:2},
+        {question:'261 - El tipo más frecuente de inversión de temperatura basada en el suelo o la superficie es la producida por:',  options:['a) Radiación terrestre en una noche clara y relativamente tranquila.','b) aire caliente que se eleva rápidamente en las proximidades de un terreno montañoso','c) el movimiento de aire más frío bajo aire caliente, o el movimiento de aire caliente sobre ai'],correctAnswerIndex:0},
+        {question:'262 - ¿Aproximadamente a que altitud sobre la superficie el piloto experimentara la base de las nubes cumuliformes, si la temperatura de la superficie es 82F y el punto de rocío es 38F?',  options:['a) 9,000 ft AGL','b) 10,000 ft AGL','c) 11,000 ft AGL'],correctAnswerIndex:1},
+        {question:'263 - ¿En cuál ambiente es más probable la formación de hielo en la estructura de la aeronave?',  options:['a) Nubes cumulus con temperaturas de congelamiento','b) Llovizna helada','c) Lluvia congelante'],correctAnswerIndex:2},
+        {question:'264 - cuando el aire caliente, húmedo y estable fluye cuesta arriba',  options:['a) produce nubes tipo estratificadas','b) causa lluvias y tormentas','c) desarrolla turbulencia convectiva'],correctAnswerIndex:0},
+        {question:'265 - ¿Cuál es la característica de aire estable?',  options:['a) Nubes estratiformes','b) Visibilidad ilimitada','c) Nubes cúmulos'],correctAnswerIndex:0},
+        {question:'266 - ¿Qué tipo de nubes tienen la mayor turbulencia?',  options:['a) Towering cumulus','b) Cumulonimbus','c) Nimbostratus'],correctAnswerIndex:1},
+        {question:'267 - ¿Qué medida puede ser usada para determinar la estabilidad de la atmosfera?',  options:['a) Presión atmosférica','b) Razón de lapso actual','c) Temperatura de la superficie'],correctAnswerIndex:1},
+        {question:'268 - un piloto puede esperar una zona de cizalladura en una inversión de temperatura siempre que la velocidad del viento a 2,000 a 4,000 pies sobre la superficie sea al menos:',  options:['a) 10 Kt','b) 15 Kt','c) 25 Kt'],correctAnswerIndex:2},
+        {question:'269 - Si una masa de aire inestable se fuerza hacia arriba, ¿qué tipo de nubes se pueden esperar?',  options:['a) Nubes estratificadas con pequeño desarrollo vertical','b) Nubes estratificadas asociadas con turbulencia','c) Nubes con desarrollo vertical y asociadas a turbulencia'],correctAnswerIndex:2},
+        {question:'270 - en cual situación la niebla de advección es más común para formarse?',  options:['a) Ambiente cálido, aire húmedo cerca de montañas','b) Masa de aire moviéndose hacia la tierra desde la costa en invierno','c) Briza ligera enfriando el aire del océano'],correctAnswerIndex:1},
+        {question:'271 - nubes están divididas en cuatro familias dependiendo de:',  options:['a) forma externa','b) rango de altura','c) composición'],correctAnswerIndex:1},
+        {question:'272 - ¿Que tipos de niebla dependen del viento para existir?',  options:['a) Niebla de radiación y niebla de hielo','b) Vapor de niebla y niebla superficial','c) niebla de advección y niebla de pendiente ascendente'],correctAnswerIndex:2},
+        {question:'273 - una banda estrecha no frontal de tormentas eléctricas activas que a menudo se desarrollan antes de un frente frío se conoce como:',  options:['a) Sistema prefrontal','b) Línea de turbonada','c) Línea seca'],correctAnswerIndex:1},
+        {question:'274 - Una de las discontinuidades más fáciles de reconocer en un frente es:',  options:['a) cambios de temperatura','b) incremento en la cobertura de las nubes','c) incremento en la humedad relativa'],correctAnswerIndex:0},
+        {question:'275 - las tormentas que generalmente producen el mayor peligro a las aeronaves:',  options:['a) tormentas eléctricas de línea de turbonada','b) tormentas estacionarias','c) tormentas con frente caliente'],correctAnswerIndex:0},
+        {question:'276 - La posible turbulencia de las olas de montaña podría anticiparse cuando soplan vientos de 40 nudos o más.',  options:['a) a través de una cresta de montaña, y el aire es estable','b) por un valle de montaña, y el aire es inestable','c) paralelo al pico de la montaña, y el aire es estable'],correctAnswerIndex:0},
+        {question:'277 - ¿Cuáles son los procesos mediante los cuales se agrega humedad al aire insaturado?',  options:['a) Evaporación y sublimación','b) calentamiento y condensación','c) sobresaturación y evaporación'],correctAnswerIndex:0},
+        {question:'278 - ¿En qué tipo de niebla se pueden producir turbulencias de bajo nivel y la formación de hielo puede volverse peligrosa?',  options:['a) niebla inducida por lluvia','b) niebla cuesta arriba','c) niebla de vapor'],correctAnswerIndex:2},
+        {question:'279 - La precipitación constante que precede a un frente es una indicación de:',  options:['a) nubes estratiformes con turbulencia moderada','b) nubes cumuliformes con poca o ninguna turbulencia','c) nubes estratiformes con poca o ninguna turbulencia'],correctAnswerIndex:2},
+        {question:'280 - Un fenómeno meteorológico que siempre ocurrirá cuando se vuela a través de un frente es un cambio en el',  options:['a) Dirección del viento','b) Tipo de precipitación','c) Estabilidad de la masa de aire'],correctAnswerIndex:0},
+        {question:'281 - ¿Qué disminuiría la estabilidad de una masa de aire?',  options:['a) calentamiento desde abajo','b) enfriamiento desde abajo','c) disminución del vapor de agua'],correctAnswerIndex:0},
+        {question:'282 - ¿Cómo afectará la escarcha en las alas de un avión al rendimiento del despegue?',  options:['a) La escarcha interrumpirá el flujo suave de aire sobre el ala, lo que afectará negativamente','b) La escarcha cambiará la curvatura del ala, aumentando su capacidad de elevación.','c) La escarcha hará que el avión se eleve con un ángulo de ataque más alto, disminuyendo la vel'],correctAnswerIndex:0},
+        {question:'283 - ¿Qué fenómeno meteorológico señala el comienzo de la etapa madura de una tormenta eléctrica?',  options:['a) la aparición de una tapa de yunque','b) la precipitación comienza a caer','c) tasa máxima de crecimiento de las nubes'],correctAnswerIndex:1},
+        {question:'284 - ¿Qué causa las variaciones en la configuración del altímetro entre los puntos de informes meteorológicos?',  options:['a) calentamiento desigual de la superficie terrestre','b) variación de la elevación del terreno','c) fuerza de coriolis'],correctAnswerIndex:0},
+        {question:'285 - ¿Las tormentas eléctricas que generalmente producen el peligro más intenso para las aeronaves son?',  options:['a) tormentas eléctricas de línea de turbonada','b) tormentas eléctricas de estado estacionario','c) tormentas eléctricas de frente cálido'],correctAnswerIndex:0},
+        {question:'286 - una masa de aire estable es más probable que tenga qué características',  options:['a) precipitación lluviosa','b) aire turbulento','c) poca visibilidad en la superficie'],correctAnswerIndex:2},
+        {question:'287 - En qué tipo de niebla pueden producirse turbulencias de bajo nivel y la formación de hielo puede volverse peligrosa:',  options:['a) lluvia y niebla','b) niebla ascendente','c) niebla de vapor'],correctAnswerIndex:2},
+        {question:'288 - La precipitación constante que precede a un frente es una indicación de:',  options:['a) Nubes estratiformes con turbulencia moderada','b) Nubes cumuliformes con poca o nula turbulencia','c) Nubes estratiformes con poca o nula turbulencia'],correctAnswerIndex:2},
+        {question:'289 - ¿Qué característica está asociada con una inversión de temperatura?',  options:['a) Una capa estable de aire','b) Una capa inestable de aire','c) Vientos chinook en las laderas de las montañas.'],correctAnswerIndex:0},
+        {question:'290 - cuando una cizalladura de viento puede ser esperada?',  options:['a) Cuando el aire estable cruza una montaña formando nubes lenticulares','b) En áreas de bajo nivel de temperatura, zona frontal y turbulencia de aire claro','c) Formación de Nubes estratocúmulos'],correctAnswerIndex:1},
+        {question:'291 - cuál es la causa de variaciones en el altímetro entre el clima y los puntos de reporte?',  options:['a) calentamiento desigual de la superficie terrestre','b) variación en la elevación del terreno','c) fuerza de coriolis'],correctAnswerIndex:0},
+        {question:'292 - si hay actividad de tormenta eléctrica en las cercanías de un aeropuerto en el que planea aterrizar, qué fenómeno atmosférico peligroso podría esperarse en la aproximación al aterrizaje',  options:['a) lluvia estática','b) turbulencia de cizalladura de viento','c) lluvia'],correctAnswerIndex:1},
+        {question:'293 - ¿Qué situación es más propicia para la formación de niebla de radiación?',  options:['a) aire cálido y húmedo sobre áreas bajas y planas en noches despejadas y tranquilas','b) aire tropical húmedo que se mueve sobre aguas frías de alta mar','c) el movimiento del aire frío sobre agua mucho más caliente'],correctAnswerIndex:0},
+        {question:'294 - al encontrar turbulencias severas, ¿qué condición de vuelo debería el piloto intentar mantener?',  options:['a) Altitud constante y velocidad','b) Angulo de ataque constante','c) Actitud de vuelo recto y nivelado.'],correctAnswerIndex:2},
+        {question:'295 - La acumulación de vapor de agua que el aire puede contener depende de:',  options:['a) Punto de rocío','b) Temperatura del aire','c) Estabilidad del aire'],correctAnswerIndex:1},
+        {question:'296 - ¿Qué tipo de nubes indican turbulencia convectiva?',  options:['a. nubes cirrus','b. nubes nimbostratus','c. nubes con desarrollo vertical (towering cumulus)'],correctAnswerIndex:2},
+        {question:'297 - ¿Qué condiciones resultan en la formación de escarcha?',  options:['a) La temperatura de la superficie esta en o sobre el punto de congelamiento cuando pequeñas go','b) La temperatura de la superficie está en o abajo del punto de rocío del aire y el punto de ro','c) La temperatura del aire esta en o por debajo del punto de congelamiento.'],correctAnswerIndex:1},
+        {question:'298 - ¿Los SIGMET se emiten como una advertencia de condiciones meteorológicas peligrosas para qué aeronave?',  options:['a) Aeronaves pequeñas','b) Aeronaves grandes','c) Todas las aeronaves'],correctAnswerIndex:2},
+        {question:'299 - ¿Qué valores se utilizan para el pronóstico de vientos en altura?',  options:['a) Dirección magnética y nudos','b) Dirección magnética y millas por hora','c) Dirección verdadera y nudos'],correctAnswerIndex:2},
+        {question:'300 - (fig. 17) ¿Qué viento se pronostica para STL a 9.000 pies?',  options:['a) 230 grados verdadero a 32 Kt','b) 230 grados magnéticos a 25 Kt','c) 230 grados verdadero a 25 Kt'],correctAnswerIndex:0},
+        {question:'301 - para fines de aviación, el techo se define como la altura sobre la superficie terrestre del?',  options:['a) oscurecimiento más bajo reportado y la capa más alta de nubes reportada como nublada','b) capa más baja rota o nublada o visibilidad vertical en un oscurecimiento','c) capa más baja de nubes reportada como dispersa, rota o delgada'],correctAnswerIndex:1},
+        {question:'302 - ¿En cuál aviso de vuelo contendría información sobre engelamiento severo no asociado con tormentas eléctricas?',  options:['a) Convective SIGMET','b) SIGMET','c) AIRMET'],correctAnswerIndex:1},
+        {question:'303 - (fig15) en el TAF para KMEM, que significa SHRA?',  options:['a) Rain Showers','b) Cambio de dirección en el viento','c) Cambio en la precipitación puede ser posible'],correctAnswerIndex:0},
+        {question:'304 - (fig17) determine el viento y la temperatura para MKC a 6,000 ft',  options:['a) 200 grados verdadero a 6 Kt, temperatura 3C','b) 050 grados verdadero a 7Kt','c) 200 grados magnéticos a 6Kt, temperatura 3C'],correctAnswerIndex:0},
+        {question:'305 - (fig14) el viento y la temperatura a 12,000 ft MSL es reportado por el piloto cómo?',  options:['a) 090 grados a 21 MPH y -9F','b) 090 grados a 21 KT y - 9C','c) 080 grados a 21 KT y -7C'],correctAnswerIndex:2},
+        {question:'306 - un informe meteorológico que se proporciona cuando la información solicitada es 6 o más horas antes de la hora de salida propuesta es',  options:['a) an Outlook briefing','b) a forecast briefing','c) a prognostic briefing'],correctAnswerIndex:0},
+        {question:'307 - ¿Qué aviso a bordo contendría información sobre engelamiento severo no asociado con tormentas eléctricas?',  options:['a) Convective SIGMET','b) SIGMET','c) AIRMET'],correctAnswerIndex:1},
+        {question:'308 - ¿Qué se indica cuando el SIGMET convectivo actual pronostica tormentas eléctricas?',  options:['a) Tormentas moderadas cubriendo el 30 por ciento del área','b) Tormentas moderadas o severas','c) tormentas eléctricas oscurecidas por capas de nubes masivas'],correctAnswerIndex:2},
+        {question:'309 - (fig. 14) ¿Cuál es la intensidad y el tipo de congelamiento informado por un piloto?',  options:['a) Ligera a moderada','b) Escarcha ligera a moderada','c) Ligera a moderada clara'],correctAnswerIndex:1},
+        {question:'310 - (fig15) ¿Cuál es el período válido para el TAG para KMEM?',  options:['a) 12 1800Z hasta 13 2400Z','b) 12 a las 1700Z','c) 1218Z a las 1324Z'],correctAnswerIndex:0},
+        {question:'311 - (fig. 15) durante el período de tiempo de 0600Z a 0800Z, ¿qué visibilidad se prevé para KOKC?',  options:['a) mayor de 6 millas estatutas','b) sin pronostico','c) posible 6 millas estatutas'],correctAnswerIndex:0},
+        {question:'312 - Para determinar mejor las condiciones meteorológicas de pronóstico general que cubren una región de información de vuelo, el piloto debe consultar.',  options:['a) Graphical Forecasts for Aviation (GFA)','b) gráficos de descripción del tiempo','c) mapas satelitales'],correctAnswerIndex:0},
+        {question:'313 - (Fig. 12) la sección de comentarios para KMDW tiene RAB35 en la lista. esta entrada significa?',  options:['a) la niebla que sopla ha reducido la visibilidad a 1-1 / 2 SM','b) lluvia inicia a las 1835Z','c) el barómetro aumento.35 inHg'],correctAnswerIndex:1},
+        {question:'314 - ¿Quién es el responsable de determinar si se realiza un vuelo de forma segura aun teniendo un certificado médico vigente?',  options:['a) La autoridad de aviación civil','b) El examinador medico','c) El piloto'],correctAnswerIndex:2},
+        {question:'315 - ¿Muchos de los accidentes de colisión ocurren durante?',  options:['a) Días nublados','b) Días claros','c) Noches nubladas'],correctAnswerIndex:1},
+        {question:'316 - Las luces del aeropuerto del borde de las calles de taxeo, se identifican en la noche por:',  options:['a) Luz direccional blanca','b) Luz omnidireccional azul','c) Luz alternando rojo y verde'],correctAnswerIndex:1},
+        {question:'317 - ¿Cuál es el procedimiento de patrón de tráfico correcto para salir de un aeropuerto no controlado?',  options:['a) Salir en cualquier dirección con seguridad, después cruzar el área del aeropuerto','b) Realizar todos los virajes a la izquierda','c) Cumplir con el patrón de tráfico establecido por la autoridad para ese aeropuerto.'],correctAnswerIndex:2},
+        {question:'318 - Los números 9 y 27 en una pista indican que la pista está orientada aproximadamente:',  options:['a) 009 grados y 027 grados verdadero','b) 090 grados y 270 grados verdadero','c) 090 grados y 270 grados magnéticos'],correctAnswerIndex:2},
+        {question:'319 - Un aeropuerto militar, puede ser identificado por una luz rotativa:',  options:['a) Blanco y verde alternativo','b) Dos luces blancas intermitentes entre luces verdes intermitentes','c) Verde, amarillo y blanco'],correctAnswerIndex:1},
+        {question:'320 - Antes de iniciar cualquier maniobra, los pilotos deben:',  options:['a) Revisar la altitud, velocidad y rumbo','b) Buscar visualmente otros tráficos para evitar colisión','c) Reportar intenciones con el ATC'],correctAnswerIndex:1},
+        {question:'321 - ¿Cuál es uno de los factores que afecta los accidentes?',  options:['a) Falla estructural','b) Falla mecánica','c) Error humano'],correctAnswerIndex:2},
+        {question:'322 - Durante un vuelo de noche, se observa una luz fija roja y verde de frente a la misma altitud, ¿cuál es la dirección general que debe tomar la otra aeronave?',  options:['a) La otra aeronave está cruzando a la izquierda','b) La otra aeronave se está alejando','c) La otra aeronave está aproximando de frente.'],correctAnswerIndex:2},
+        {question:'323 - La falta de orientación sin importar la posición, actitud o movimiento de la aeronave en el espacio es definida como:',  options:['a) Desorientación espacial','b) Hiperventilación','c) Hipoxia'],correctAnswerIndex:0},
+        {question:'324 - El método más efectivo para buscar otras aeronaves para evitar una colisión durante las horas de la noche es usar:',  options:['a) Concentrarse en uno de los tres puntos, nueve, tres y doce en punto','b) Series cortas de visión cada 30 grados','c) Enfocarse en pequeñas áreas sectorizadas'],correctAnswerIndex:2},
+        {question:'325 - ¿Qué técnica debe un piloto utilizar para buscar los tráficos a la derecha e izquierda en vuelo recto y nivelado?',  options:['a) Sistemáticamente enfocarse en diferentes segmentos del cielo por intervalos cortos de tiempo','b) Concentrarse en movimientos relativos detectados en la visión perimetral del área','c) Observar de izquierda a derecha a través del windshield'],correctAnswerIndex:0},
+        {question:'326 - Cuando se aproxima a una calle de taxeo las líneas de espera son continuas, el piloto debe:',  options:['a) Debe continuar el taxeo','b) No puede cruzar las líneas sin autorización del ATC','c) Puede continuar el taxeo hasta que toda la aeronave haya cruzado las líneas'],correctAnswerIndex:1},
+        {question:'327 - Cuando se opera una aeronave a altitudes sobre 12,500 ft MSL e incluyendo 14,000 ft MSL, oxigeno suplementario debe ser usado durante:',  options:['a) Todo el tiempo de vuelo','b) No excediendo 10 minutos a esas altitudes','c) No excediendo 30 minutos a esas altitudes'],correctAnswerIndex:2},
+        {question:'328 - (fig. 52) que tipo de servicio radar provee a las aeronaves VFR en el Lincoln Municipal?',  options:['a) Secuencia para el aeropuerto clase C y separación standard','b) Secuencia para el aeropuerto clase C y resolución de conflictos y 1000 ft de separación','c) Secuencia para el aeropuerto clase C, información de tráfico, resolución de conflictos y ale'],correctAnswerIndex:2},
+        {question:'329 - ¿Cuál es el propósito de la señal de posición de espera en la pista?',  options:['a) Define la entrada a la pista desde la línea de taxeo','b) Define el área protegida para una aeronave aproximando o saliendo de una pista','c) Define la intersección de las pistas'],correctAnswerIndex:2},
+        {question:'330 - En una condición de stress durante el vuelo, un incremento anormal en el volumen del aire puede causar la condición de:',  options:['a) Hiperventilación','b) Aerosinusitis','c) Aerotitis'],correctAnswerIndex:0},
+        {question:'331 - ¿Qué preparación debe de tener un piloto para adaptar los ojos para el vuelo nocturno?',  options:['a) Usar lentes para sol después del atardecer hasta que esté listo para volar','b) Evitar la luz roja por lo menos 30 minutos antes del vuelo','c) Evitar las luces brillantes al menos 30 minutos antes del vuelo'],correctAnswerIndex:2},
+        {question:'332 - ¿Que define la hipoxia?',  options:['a) Deficiencia de oxígeno en la sangre','b) Incremento anormal en la respiración','c) Formación de burbujas de gas alrededor de las articulaciones'],correctAnswerIndex:0},
+        {question:'333 - Los movimientos oculares durante el escaneo para evitar colisiones durante el día deben:',  options:['a) No exceder 10 grados y observar cada sector al menos por un segundo','b) Revisar 30 grados cada sector por al menos 3 segundos','c) Escanear sectores pequeños'],correctAnswerIndex:0},
+        {question:'334 - Los pilotos tienen a desorientarse espacialmente debido a:',  options:['a) Ignoran las sensaciones del oído interno','b) Las señales visuales se eliminan ya que están en condiciones IMC','c) El movimiento de los ojos es más seguido debido al proceso de chequear los instrumentos'],correctAnswerIndex:1},
+        {question:'335 - Las aproximaciones VFR para aterrizar en la noche deberían ser:',  options:['a) A velocidades de aproximación más altas','b) Con descensos escalonados','c) Igual que durante el día.'],correctAnswerIndex:2},
+        {question:'336 - Las luces del borde de la calle de rodaje del aeropuerto se identifican por la noche:',  options:['a) Luz blanca','b) Luz azul','c) Luz roja y verde'],correctAnswerIndex:1},
+        {question:'337 - ¿Cuál es el resultado de hiperventilación?',  options:['a) Tensión emocional, ansiedad o miedo','b) Consumo excesivo de alcohol','c) Respiración baja'],correctAnswerIndex:0},
+        {question:'338 - (fig. 49) seleccione el patrón de tráfico correcto y la pista para aterrizar.',  options:['a) Trafico por izquierda y la pista 18','b) Trafico por derecha y la pista 18','c) Trafico por izquierda y pista 22'],correctAnswerIndex:1},
+        {question:'339 - ¿Que asegura el piloto si vuela en la senda de planeo correcta de las luces VASI?',  options:['a) Identificación de la pista','b) Liberación de obstáculos en el área de aproximación','c) Guía lateral hacia la pista'],correctAnswerIndex:1},
+        {question:'340 - Antes de realizar cualquier maniobra, el piloto debe de:',  options:['a) Revisar la altitud, velocidad y rumbo','b) Visualmente escanear el área para evitar cualquier colisión','c) Reportar sus intenciones a la torre de control más cercana'],correctAnswerIndex:1},
+        {question:'341 - ¿Durante qué periodo de tiempo se debería encender las luces de posición en una aeronave?',  options:['a) Al finalizar el crepúsculo civil vespertino al inicio del crepúsculo civil matutino','b) Una hora después de la puesta del sol y una hora antes del amanecer','c) Atardecer al amanecer'],correctAnswerIndex:2},
+        {question:'342 - Un piloto que experimente los efectos de la hiperventilación debería poder restaurar el nivel adecuado de dióxido de carbono en el cuerpo al:',  options:['a) Respirando despacio, respirando dentro de una bolsa de papel o hablando fuerte','b) Respirando profundamente y manteniendo el control mental','c) Incrementando la respiración para aumentar la ventilación en los pulmones'],correctAnswerIndex:0},
+        {question:'343 - El envenenamiento con monóxido de carbono se incrementa cuando:',  options:['a) La altitud aumenta','b) La altitud disminuye','c) La presión en el aire aumenta'],correctAnswerIndex:0},
+        {question:'344 - (fig. 47) Ilustración A indica que la aeronave esta:',  options:['a) Debajo de la senda','b) En la senda correcta','c) Arriba de la senda'],correctAnswerIndex:1},
+        {question:'345 - Un aeropuerto militar puede ser identificado por una luz rotativa que emite colores:',  options:['a) Blanco y verde alternativamente','b) Dos luces blancas y dos luces verdes','c) Verde, amarilla y blanca'],correctAnswerIndex:1},
+        {question:'346 - Cuando se aproxima a las líneas de “mantenga posición” del lado de la línea continua, el piloto debe:',  options:['a) Continuar taxeando','b) No puede cruzar sin autorización del ATC','c) Debería continuar taxeando hasta que toda la aeronave haya cruzado completamente'],correctAnswerIndex:1},
+        {question:'347 - ¿Qué frase antídoto puede ayudar a revertir la peligrosa actitud de anti- autoridad?',  options:['a) Reglas que no aplican en esta situación','b) Yo sé lo que estoy haciendo','c) Siguiendo las reglas'],correctAnswerIndex:2},
+        {question:'348 - (fig. 47) en aproximación final a la pista equipada con standard 2-BAR VASI, las luces aparecen como se muestra en la ilustración D. esto significa que la aeronave se encuentra:',  options:['a) Sobre la senda de descenso','b) Debajo de la senda de descenso','c) En la senda correcta'],correctAnswerIndex:1},
+        {question:'349 - la marca de la barra de demarcación amarilla indica',  options:['a) umbral desplazado que precede la pista','b) línea de espera de la calle de taxeo a la pista','c) el inicio de la pista disponible para aterrizar'],correctAnswerIndex:0},
+        {question:'350 - ¿Qué efecto tiene la neblina en la capacidad de ver el tráfico o las características del terreno durante el vuelo?',  options:['a) neblina hace que los ojos se enfoquen al infinito','b) los ojos tienden a trabajar demasiado en la bruma y no detectan fácilmente el movimiento','c) todo el tráfico o las características del terreno parecen estar más lejos que su distancia r'],correctAnswerIndex:2},
+        {question:'351 - El envenenamiento por monóxido de carbono aumenta',  options:['a) Incrementando la altitud','b) Disminuyendo la altitud','c) Presión del aire aumenta'],correctAnswerIndex:0},
+        {question:'352 - ¿Como se puede determinar si otra aeronave está en el curso para colisionar con su aeronave?',  options:['a) La otra aeronave siempre aparecerá más cerca y más grande','b) La nariz de la aeronave están apuntándose de frente','c) No se verá aparente movimiento relativo entre su aeronave y la otra'],correctAnswerIndex:2},
+        {question:'353 - ¿En la toma de decisión aeronáutica, cual es el primer paso para neutralizar una actitud peligrosa?',  options:['a) Realizar un juicio racional','b) Reconocer pensamientos peligrosos','c) Reconocer la vulnerabilidad de la situación'],correctAnswerIndex:1},
+        {question:'354 - Un piloto que experimenta los efectos de hiperventilación debería de poder restaurar el nivel de dióxido de carbono en el cuerpo por:',  options:['a) Respirando despacio, respirando usando una bolsa de papel, o hablando fuerte','b) Respirando espontáneamente y profundo y teniendo control mental de la situación','c) Incrementando la respiración'],correctAnswerIndex:0},
+        {question:'355 - (fig. 65) cuales marcas de aeropuerto es un área de seguridad de la pista/zona libre de obstáculos?',  options:['a) G','b) H','c) N'],correctAnswerIndex:1},
+        {question:'356 - ¿Cuál es el propósito de la señal de no entrar?',  options:['a) Identificar el área pavimentada donde la aeronave no puede entrar','b) Identificar el área que no es una continuación de una intersección','c) Identificar la salida de un área protegida'],correctAnswerIndex:0},
+        {question:'357 - La gestión de riesgos como parte del proceso de toma de decisiones aeronáuticas, ¿depende de qué características reducir los riesgos asociados con cada vuelo?',  options:['a) Manejo de stress y riesgo','b) Conciencia situacional, reconocimiento de problemas y buen juicio','c) Proceso mental para analizar toda la información en una situación en particular y toma de de'],correctAnswerIndex:1},
+        {question:'358 - Un beacon rotativo operando en el aeropuerto durante horas del día indica:',  options:['a) Que existen obstrucciones en el aeropuerto','b) Que el clima en el aeropuerto localizado en categoría D está por debajo de las condiciones m','c) Que la torre de control no está operativa'],correctAnswerIndex:1},
+        {question:'359 - ¿Cuál es la posición de entrada correcta para un patrón de tráfico?',  options:['a) 45 grados en la pierna de base por debajo de la altitud del trafico','b) Entrar a 45 grados en el punto medio del tramo con el viento y a la altitud del trafico','c) Cruzar directamente sobre el aeropuerto a la altitud del trafico'],correctAnswerIndex:1},
+        {question:'360 - Al taxear con viento de cola fuerte, ¿qué posiciones de los alerones se deben utilizar?',  options:['a) Alerones abajo del lado del viento','b) Alerones neutral','c) Alerones abajo en el lado del cual el viento está golpeando.'],correctAnswerIndex:2},
+        {question:'361 - El peligro de la desorientación espacial durante el vuelo en condiciones de visibilidad reducida puede ser minimizado por:',  options:['a) Alternando la visión hacia el exterior y luego al panel de instrumentos','b) Confiando en la indicación de los instrumentos y no en las sensaciones del cuerpo.','c) Alineando el cuerpo en la dirección opuesta al movimiento de la aeronave.'],correctAnswerIndex:1},
+        {question:'362 - Durante un vuelo nocturno, observa luces rojas y verdes fijas adelante y a la misma altitud. ¿Cuál es la dirección general de movimiento de la otra aeronave?',  options:['a) La otra aeronave está cruzando a la izquierda','b) La otra aeronave se está alejando de usted','c) La otra aeronave se está aproximando frente a usted.'],correctAnswerIndex:2},
+        {question:'363 - (fig. 38) determinar la distancia de aterrizaje: Altitud presión 5,000 ft Viento de frente calmo Temperatura 101F',  options:['a) 495 ft','b) 545 ft','c) 445 ft'],correctAnswerIndex:1},
+        {question:'364 - (fig. 8) cual es el efecto si la temperatura se incrementa de 25 grados a 50 en la altitud densidad, si la altitud presión permanece en 5,000 ft?',  options:['a) Aumenta 1,200 ft','b) Aumenta 1,400 ft','c) Aumenta 1,650 ft'],correctAnswerIndex:2},
+        {question:'365 - (fig. 34) determine el momento según los datos siguientes: Peso LBS MOM/1000 Peso vacío 1,350 51.5 Asientos frontales 340 --- Combustible (tanques std) capacity --- Aceite, 8 qt',  options:['a) 69.9 libras pulgadas','b) 74.9 libras pulgadas','c) 77.6 libras pulgadas'],correctAnswerIndex:1},
+        {question:'366 - ¿Si una aeronave está sobre cargada con 90lbs más de su peso certificado y el combustible es drenado para que este dentro de los límites de peso, cuanto combustible debe de ser drenado?',  options:['a) 10 galones','b) 12 galones','c) 15 galones'],correctAnswerIndex:2},
+        {question:'367 - (fig. 38) determine la distancia total requerida para aterrizar sobre un obstáculo de 50 ft Altitud presión 5,000 ft Viento de frente 8 kts Temperatura 41F Pista: superficie dura',  options:['a) 837 ft','b) 956 ft','c) 1,076 ft'],correctAnswerIndex:1},
+        {question:'368 - ¿Que efecto hace que una alta altitud densidad, comparada con una baja altitud densidad afecte en la eficiencia de la hélice y por qué?',  options:['a) Eficiencia es incrementada debido a una fricción menor en la hélice','b) La eficiencia es reducida porque la hélice ejerce menos fuerza a altas altitudes que en baja','c) La eficiencia es reducida debido al incremento de la fuerza de la hélice en aire menos denso'],correctAnswerIndex:1},
+        {question:'369 - (fig. 36) con vientos reportados del norte a 20 kts, que pista (6, 29, o 32) es aceptable para uso de una aeronave con 13kt máximo de componente de viento?',  options:['a) Pista 6','b) Pista 29','c) Pista 32'],correctAnswerIndex:2},
+        {question:'370 - (fig. 8) determinar la altitud densidad para estas condiciones: Ajuste altimétrico 29.25 Temperatura de la pista +81F Elevación del aeropuerto 5,250 ft MSL',  options:['a) 4,600 ft MSL','b) 5,877 ft MSL','c) 8,500 ft MSL'],correctAnswerIndex:2},
+        {question:'371 - (fig. 8) determinar la altitud presión en un aeropuerto que está a 3,563 ft MSL con un ajuste altimétrico de 29.96 in Hg.',  options:['a) 3,527 ft MSL','b) 3,556 ft MSL','c) 3,639 ft MSL'],correctAnswerIndex:0},
+        {question:'372 - (fig. 37) determinar la distancia total requerida para aterrizar OAT 90F Altitud presión 3,000 ft Peso 2,900 lbs Componente de viento de frente 10 kts Obstáculo 50 ft',  options:['a) 1,450 ft','b) 1,550 ft','c) 1,725 ft'],correctAnswerIndex:2},
+        {question:'373 - (fig. 38) determinar la distancia de aterrizaje: Altitud presión: nivel del mar Viento de frente: 4kts Temperatura: standard',  options:['a) 356 ft','b) 401 ft','c) 490 ft'],correctAnswerIndex:1},
+        {question:'374 - ¿Cuál combinación de condiciones atmosféricas reducirá el rendimiento de despegue y ascenso de una aeronave?',  options:['a) Baja temperatura, baja humedad relativa, baja altitud densidad','b) Alta temperatura, baja humedad relativa, baja altitud densidad','c) Alta temperatura, alta humedad relativa, alta altitud densidad.'],correctAnswerIndex:2},
+        {question:'375 - (fig. 36) cual es el componente de viento cruzado para aterrizar en la pista 18, si la torre de control reporta viento de 220 grados a 30 kts?',  options:['a) 19 kts','b) 23 kts','c) 30 kts'],correctAnswerIndex:0},
+        {question:'376 - ¿Qué factor tiende a aumentar la altitud densidad en los aeropuertos?',  options:['a) Un incremento en la presión barométrica','b) Incremento en la temperatura ambiente','c) Disminución en la humedad relativa'],correctAnswerIndex:1},
+        {question:'377 - (fig. 8) cual es el efecto de una disminución de temperatura y un incremento de la altitud presión con una altitud densidad de 90F y 1,250 ft altitud presión de 55F y 1,750 ft altitud presión?',  options:['a) 1,700 ft incrementando','b) 1,300 ft disminuyendo','c) 1,700 ft disminuyendo'],correctAnswerIndex:2},
+        {question:'378 - (fig. 61) si 50 lbs de peso está localizado en el punto X y 100 lbs localizadas en el punto Z, cuanto peso debe de colocarse en el punto Y para balancear la tabla?',  options:['a) 30 lbs','b) 50 lbs','c) 300 lbs'],correctAnswerIndex:2},
+        {question:'379 - (fig. 32 y 33) con la aeronave cargada como sigue, que acción debe de tomar para balancear la aeronave? Asientos frontales y ocupantes 411 lbs Asientos traseros y ocupantes 100 lbs Tanques principales 44 galones',  options:['a) Llenar los tanques auxiliares de las alas','b) Agregar 100 libras al compartimento de carga','c) Transferir 10 galones de combustible de los tanques principales a los auxiliares'],correctAnswerIndex:1},
+        {question:'380 - (fig. 40) determinar la distancia aproximada para despegue: OAT 100F Altitud presión 2,000 Ft Peso de despegue 2,750 lbs Componente de viento frontal: calmo',  options:['a) 1,150 ft','b) 1,300 ft','c) 1,800 ft'],correctAnswerIndex:0},
+        {question:'381 - (fig. 32 y 33) determinar el peso y balance de la aeronave: Asiento frontal y ocupantes 415lbs Asiento trasero y ocupantes 110lbs Combustible y tanque principal 44lbs Combustible y tanque auxiliar 19lbs Equipaje 32lbs',  options:['a) 19 lbs sobre peso, dentro de los límites del CG','b) 19 lbs sobre peso, CG fuera de los limites hacia adelante','c) Peso dentro de los limites, CG fuera de los limites'],correctAnswerIndex:2},
+        {question:'382 - ¿Qué efecto tiene la altitud de alta densidad en el rendimiento de la aeronave?',  options:['a) Incrementa el rendimiento del motor','b) reduce el rendimiento de ascenso','c) incrementa el rendimiento en el despegue'],correctAnswerIndex:1},
+        {question:'383 - (fig. 20 área 2) el símbolo de la bandera en el lago Drummond representa:',  options:['a) Punto de reporte para Norfolk Clase C','b) Punto de reporte para Hampton road Airport','c) Punto visual'],correctAnswerIndex:2},
+        {question:'384 - ¿Cuál es la verdad con respecto al color azul y magenta que se usa para representar los aeropuertos en las cartas aeronáuticas seccionales?',  options:['a) Los aeropuertos con torres de control subyacentes al espacio aéreo de clase A, B y C se mues','b) Los aeropuertos con torres de control subyacentes al espacio aéreo de Clase C, D y E se mues','c) Los aeropuertos con torres de control subyacentes al espacio aéreo de clase B, C, D y E se m'],correctAnswerIndex:2},
+        {question:'385 - ¿Qué afirmación sobre la longitud y la latitud es verdadera?',  options:['a) Líneas de longitud son paralelas al ecuador','b) Lines de longitud cruzan el ecuador en ángulo recto','c) La línea de 0 grados de longitud pasa a través de Greenwich, Inglaterra'],correctAnswerIndex:1},
+        {question:'386 - Un aeropuerto satélite sin torre de control, dentro del mismo espacio aéreo clase D esta designado como aeropuerto primario, requiere comunicación por radio para establecer y mantener con:',  options:['a) UNICOM aeropuerto satélite','b) FSS','c) Torre de control con aeropuerto primario'],correctAnswerIndex:2},
+        {question:'387 - ¿Qué acción inicial debe tomar un piloto antes de ingresar al espacio aéreo Clase C?',  options:['a) Contactar al control de aproximación en la frecuencia apropiada','b) Contactar a la torre de control y solicitar permiso para ingresar','c) Contactar a la FSS para información de trafico'],correctAnswerIndex:0},
+        {question:'388 - En cual espacio aéreo los vuelos VFR están prohibidos?',  options:['a) Clase A','b) Clase B','c) Clase C'],correctAnswerIndex:0},
+        {question:'389 - las dimensiones laterales del espacio aéreo de clase D se basan en',  options:['a) el número de aeropuertos que están en espacios aéreos clase D','b) 5 NM del centro del aeropuerto principal','c) Procedimientos por instrumentos para el cual el espacio aéreo controlado está establecido'],correctAnswerIndex:2},
+        {question:'390 - El espacio aéreo en un aeropuerto con una torre de control a tiempo parcial se clasifica como espacio aéreo de clase D únicamente.',  options:['a) cuando los mínimos climáticos están por debajo del VFR básico','b) cuando la torre de control asociada está en funcionamiento','c) cuando la estación de servicio de vuelo asociada está en funcionamiento'],correctAnswerIndex:1},
+        {question:'391 - cuando una torre de control, ubicada en un aeropuerto dentro del espacio aéreo de clase D, deja de operar durante el día, ¿qué sucede con la designación del espacio aéreo?',  options:['a) la designación del espacio aéreo normalmente no cambiará','b) el espacio aéreo sigue siendo espacio aéreo de clase D siempre que haya un observador meteor','c) el espacio aéreo se revierte a Clase E o una combinación de espacio aéreo de Clase E y G dur'],correctAnswerIndex:2},
+        {question:'392 - al convertir de rumbo verdadero a rumbo magnético, un piloto debe:',  options:['a) reste la variación hacia el este y el ángulo de corrección del viento a la derecha','b) sumar la variación del oeste y restar el ángulo de corrección del viento a la izquierda','c) reste la variación del oeste y agregue el ángulo de corrección del viento derecho'],correctAnswerIndex:1},
+        {question:'393 - Las operaciones VFR normales en el espacio aéreo de clase D con una torre de control operativa requieren que el techo y la visibilidad sean al menos',  options:['a) 1,000 ft y 1 milla','b) 1,000 ft y 3 millas','c) 2,500 ft y 3 millas'],correctAnswerIndex:1},
+        {question:'394 - ¿En qué condiciones puede operar una aeronave desde un aeropuerto satélite dentro del espacio aéreo de clase C?',  options:['a) El piloto debe de llenar el plan de vuelo antes de su salida','b) El piloto debe de monitorear al ATC hasta estar libre del espacio aéreo clase C','c) El piloto debe contactar al ATC lo más pronto posible después del despegue'],correctAnswerIndex:2},
+        {question:'395 - A menos que se autorice lo contrario, se requieren comunicaciones de radio bidireccionales con el control de tráfico aéreo para el aterrizaje o despegue.',  options:['a) en todos los aeropuertos controlados por torres, independientemente de las condiciones meteo','b) en todos los aeropuertos controlados por torres solo cuando las condiciones meteorológicas s','c) en todos los aeropuertos controlados por torres dentro del espacio aéreo de clase D solo cua'],correctAnswerIndex:0},
+        {question:'396 - ¿Qué clase de espacio aéreo representa un círculo de segmento azul en un gráfico seccional?',  options:['a) Clase B','b) Clase C','c) Clase D'],correctAnswerIndex:2},
+        {question:'397 - ¿Qué distancia recorrerá un avión en 2,5 minutos con una velocidad respecto al suelo de 98 kt?',  options:['a) 2.45 NM','b) 3.35 NM','c) 4.08 NM'],correctAnswerIndex:2},
+        {question:'398 - el radio del área exterior de procedimiento del espacio aéreo de clase C es normalmente',  options:['a) 10 NM','b) 20 NM','c) 30 NM'],correctAnswerIndex:1},
+        {question:'399 - ¿Qué certificación mínima de piloto se requiere para operar dentro del espacio aéreo de clase B?',  options:['a) Certificado de piloto comercial','b) Certificado de piloto privado o permiso de piloto estudiante','c) Certificado de piloto privado con habilitación de instrumentos'],correctAnswerIndex:1},
+        {question:'400 - ¿Qué distancia recorrerá una aeronave en 7,5 minutos con una velocidad respecto al suelo de 114 kt?',  options:['a) 14.25 NM','b) 15.00 NM','c) 14.50 NM'],correctAnswerIndex:0},
+        {question:'401 - El límite vertical del espacio aéreo clase C sobre los aeropuertos primarios, generalmente es de:',  options:['a) 1,200 ft AGL','b) 3,000 ft AGL','c) 4,000 ft AGL'],correctAnswerIndex:2},
+        {question:'402 - La responsabilidad de evitar colisiones en un área de alerta recae en:',  options:['a) La agencia de control','b) Todos los pilotos','c) Controlador de tráfico aéreo'],correctAnswerIndex:1},
+        {question:'403 - (fig. 68) La línea del punto C al punto B del triángulo de viento representa:',  options:['a) Velocidad y rumbo','b) Grounspeed y curso verdadero','c) Grounspeed'],correctAnswerIndex:1},
+        {question:'404 - Un caso extremo de un piloto que se coloca detrás de la aeronave puede conducir a la trampa operativa de',  options:['a) Pérdida de conciencia situacional.','b) Pérdida de carga de trabajo.','c) Tensión interna.'],correctAnswerIndex:0},
+        {question:'405 - Para evitar perder pasos importantes, utilice siempre el',  options:['a) Listas de verificación apropiadas.','b) Velocidades aerodinámicas rotuladas.','c) Certificado de aeronavegabilidad'],correctAnswerIndex:0},
+        {question:'406 - La adherencia constante a las listas de verificación aprobadas es un signo de un/a',  options:['a) Piloto disciplinado y competente.','b) Piloto que carece de los conocimientos necesarios.','c) Piloto de poco tiempo.'],correctAnswerIndex:0},
+        {question:'407 - El proceso positivo de tres pasos en el intercambio de controles de vuelo entre pilotos incluye estos pasos verbales: (1) Usted tiene los controles de vuelo, (2) Yo tengo los controles de vuelo y (3)',  options:['a) Tienes los controles de vuelo.','b) Tengo el avión.','c) Tengo los controles de vuelo.'],correctAnswerIndex:0},
+        {question:'408 - Un piloto que depende de la memoria a corto y largo plazo para tareas repetitivas a menudo descuida',  options:['a) volar fuera de la envolvente de vuelo','b) Listas de verificación','c) Conciencia de la situación.'],correctAnswerIndex:1},
+        {question:'409 - El impulso básico para que un piloto demuestre las "cosas correctas" puede tener un efecto adverso en la seguridad, al',  options:['a) Un total desprecio por cualquier curso de acción alternativo.','b) Generar tendencias que conducen a prácticas peligrosas, muchas veces ilegales, y que pueden condu','c) permitir que los eventos, o la situación, controlen sus acciones.'],correctAnswerIndex:1},
+        {question:'410 - La toma de decisiones aeronáuticas (ADM) es un/a',  options:['a) Proceso mental de analizar toda la información en una situación particular y tomar una decisión o','b) Enfoque sistemático del proceso mental utilizado por los pilotos para determinar consistentemente','c) Proceso de toma de decisiones que se basa en el buen juicio para reducir los riesgos asociados co'],correctAnswerIndex:1},
+        {question:'411 - Ignorar los requisitos mínimos de reserva de combustible es generalmente el resultado de un exceso de confianza, haciendo caso omiso de las reglamentaciones aplicables o',  options:['a) Falta de planificación de vuelos.','b) Impulsividad.','c) Estrés físico.'],correctAnswerIndex:0},
+        {question:'412 - Los pilotos deben estar familiarizados con las alternativas positivas a',  options:['a) Contrarrestar actitudes peligrosas.','b) Asegúrese de que se hayan tomado las decisiones correctas.','c) Asegurarse de que están aplicando el antídoto adecuado'],correctAnswerIndex:0},
+        {question:'413 - ¿Qué debe hacer un piloto cuando reconoce un pensamiento como peligroso?',  options:['a) Etiquete ese pensamiento como peligroso, luego corríjalo indicando el antídoto aprendido correspo','b) Evite desarrollar este pensamiento peligroso.','c) Desarrolle este pensamiento arriesgado y continúe con la acción modificada.'],correctAnswerIndex:0},
+        {question:'414 - ¿Cuáles son algunas de las actitudes peligrosas que se tratan en la toma de decisiones aeronáuticas (ADM)?',  options:['a) Gestión de riesgos, gestión del estrés y elementos de riesgo.','b) Mala toma de decisiones, conocimiento de la situación y juicio.','c) Antiautoridad (no me digas), impulsividad (hacer algo rápido sin pensar), machista (yo puedo).'],correctAnswerIndex:2},
+        {question:'415 - ¿Cuál de los siguientes es el primer paso del Modelo Decide para una gestión de riesgos y una toma de decisiones aeronáuticas eficaces?',  options:['a) Identificar.','b) Detectar.','c) Evaluar.'],correctAnswerIndex:1},
+        {question:'416 - Una serie de errores de juicio que pueden conducir a un accidente relacionado con factores humanos a veces se denominan',  options:['a) Cadena de errores.','b) Curso de acción.','c) Modelo DECIDE.'],correctAnswerIndex:0},
+        {question:'417 - ¿Cuál es uno de los elementos que se descuidan cuando un piloto confía en la memoria a corto y largo plazo para tareas repetitivas?',  options:['a) Listas de verificación.','b) Conciencia de la situación.','c) Volar fuera de la envolvente de vuelo.'],correctAnswerIndex:0},
+        {question:'418 - ¿Cuál es el factor común que afecta a la mayoría de los accidentes prevenibles?',  options:['a) Falla estructural','b) Mal funcionamiento mecánico','c) Error humano'],correctAnswerIndex:2},
+        {question:'419 - ¿Qué conduce a menudo a la desorientación espacial o la colisión con el suelo/obstáculos cuando se vuela bajo las reglas de vuelo visual (VFR)?',  options:['a) Vuelo continuo en condiciones de instrumentos.','b) Ponerse detrás de la aeronave.','c) Síndrome de Duck-under.'],correctAnswerIndex:0},
+        {question:'420 - ¿Quién es responsable de determinar si un piloto está apto para volar en un vuelo en particular?',  options:['a) AAC','b) El piloto.','c) El examinador médico.'],correctAnswerIndex:1},
+        {question:'421 - ¿Qué frase antídoto puede ayudar a revertir la peligrosa actitud de “resignación”?',  options:['a) ¿De qué sirve?','b) Alguién más es responsable.','c) No estoy indefenso.'],correctAnswerIndex:2},
+        {question:'422 - ¿Quién es responsable de determinar si un piloto está apto para volar en un vuelo en particular, aunque tenga un certificado médico vigente?',  options:['a) La AAC','b) El examinador médico.','c) El piloto.'],correctAnswerIndex:2},
+        {question:'423 - ¿Qué frase antídoto puede ayudar a revertir la peligrosa actitud de “macho”?',  options:['a) Puedo hacerlo.','b) Arriesgarse es una tontería.','c) Nada pasará.'],correctAnswerIndex:1},
+        {question:'424 - ¿Qué frase antídoto puede ayudar a revertir la peligrosa actitud de “invulnerabilidad”?',  options:['a) No me pasará a mi.','b) No puede ser tan malo.','c) Puede pasarme a mi.'],correctAnswerIndex:2},
+        {question:'425 - La gestión de riesgos, como parte del proceso de toma de decisiones aeronáuticas (ADM), ¿en qué características se basa para reducir los riesgos asociados con cada vuelo?',  options:['a) Aplicación de procedimientos de manejo de estrés y elementos de riesgo.','b) Conciencia situacional, reconocimiento de problemas y buen juicio.','c) El proceso mental de analizar toda la información en una situación particular y tomar una decisió'],correctAnswerIndex:1},
+        {question:'426 - En el proceso de toma de decisiones aeronáuticas (ADM), ¿cuál es el primer paso para neutralizar una actitud peligrosa?',  options:['a) Hacer un juicio racional.','b) Reconocer pensamientos peligrosos.','c) Reconocer la invulnerabilidad de la situación.'],correctAnswerIndex:1},
+        {question:'427 - Las actitudes peligrosas le ocurren a todos los pilotos en algún grado en algún momento. ¿Cuáles son algunas de estas actitudes peligrosas?',  options:['a) Mala gestión de riesgos y falta de gestión del estrés.','b) Antiautoridad, impulsividad, machismo, resignación e invulnerabilidad.','c) Conciencia situacional deficiente, juicios rápidos y falta de un proceso de toma de decisiones.'],correctAnswerIndex:1},
+        {question:'428 - ¿Qué frase antídoto puede ayudar a revertir la peligrosa actitud de “impulsividad”?',  options:['a) Puede pasarme a mi.','b) Hazlo rápido para terminar de una vez.','c) No tan rápido, piensa primero.'],correctAnswerIndex:2},
+        {question:'429 - ¿Qué frase antídoto puede ayudar a revertir la peligrosa actitud de “antiautoridad”?',  options:['a) Las reglas no aplican en esta situación.','b) Se lo que estoy haciendo.','c) Sigue las reglas'],correctAnswerIndex:2},
+        ];
+
+        // Variables globales
+        var currentQuestionIndex = 0;
+        var questions = [];
+        var score = 0;
+        var answeredQuestions = {}; // Almacena las respuestas dadas
+
+        // Inicialización al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('dbLength').innerHTML = "La base de datos tiene " + questionsRaw.length + " Preguntas";
+            checkForSavedProgress();
+
+            // Event listeners para inputs de rango
+            document.getElementById('start-index').addEventListener('input', handleManualInput);
+            document.getElementById('end-index').addEventListener('input', handleManualInput);
+        });
+
+        // ===== FUNCIÓN TOGGLE "TODOS" =====
+        function toggleRandomMode() {
+            var randomModeSwitch = document.getElementById('randomModeSwitch');
+            var randomCountGroup = document.getElementById('random-count-group');
+            var startIndexGroup = document.getElementById('start-index-group');
+            var endIndexGroup = document.getElementById('end-index-group');
+            var allQuestionsToggleWrapper = document.getElementById('all-questions-toggle-wrapper');
+            var shuffleToggleWrapper = document.getElementById('shuffle-toggle-wrapper');
+            var allQuestionsSwitch = document.getElementById('allQuestionsSwitch');
+            var shuffleSwitch = document.getElementById('shuffleSwitch');
+            var randomCountInput = document.getElementById('random-count');
+
+            if (randomModeSwitch.checked) {
+                // Activar modo examen
+                randomCountGroup.style.display = 'block';
+                startIndexGroup.style.display = 'none';
+                endIndexGroup.style.display = 'none';
+
+                // Ocultar toggles "Todas" y "Aleatorio"
+                allQuestionsToggleWrapper.style.display = 'none';
+                shuffleToggleWrapper.style.display = 'none';
+
+                // Desactivar los switches (por si acaso)
+                allQuestionsSwitch.checked = false;
+                shuffleSwitch.checked = false;
+
+                // Sugerir 50 preguntas por defecto
+                if (!randomCountInput.value) {
+                    randomCountInput.value = 50;
+                }
+
+                // Actualizar placeholder con el total disponible
+                randomCountInput.placeholder = "Ej: 50 (Máx: " + questionsRaw.length + ")";
+                randomCountInput.max = questionsRaw.length;
+            } else {
+                // Desactivar modo examen
+                randomCountGroup.style.display = 'none';
+                startIndexGroup.style.display = 'block';
+                endIndexGroup.style.display = 'block';
+
+                // Mostrar toggles "Todas" y "Aleatorio"
+                allQuestionsToggleWrapper.style.display = 'block';
+                shuffleToggleWrapper.style.display = 'block';
+            }
+        }
+
+        function toggleAllQuestions() {
+            var allQuestionsSwitch = document.getElementById('allQuestionsSwitch');
+            var startInput = document.getElementById('start-index');
+            var endInput = document.getElementById('end-index');
+
+            if (allQuestionsSwitch.checked) {
+                // Llenar con todas las preguntas y deshabilitar inputs
+                startInput.value = 1;
+                endInput.value = questionsRaw.length;
+                startInput.disabled = true;
+                endInput.disabled = true;
+            } else {
+                // Habilitar inputs de nuevo
+                startInput.disabled = false;
+                endInput.disabled = false;
+            }
+        }
+
+        // Función para manejar input manual (desactiva toggle "Todos" si se modifica)
+        function handleManualInput() {
+            var allQuestionsSwitch = document.getElementById('allQuestionsSwitch');
+            var startInput = document.getElementById('start-index');
+            var endInput = document.getElementById('end-index');
+
+            // Si el usuario modifica los inputs manualmente, desactivar el toggle "Todos"
+            if (allQuestionsSwitch.checked) {
+                var isAllQuestions = (parseInt(startInput.value) === 1 &&
+                                     parseInt(endInput.value) === questionsRaw.length);
+                if (!isAllQuestions) {
+                    allQuestionsSwitch.checked = false;
+                    startInput.disabled = false;
+                    endInput.disabled = false;
+                }
+            }
+        }
+
+        // ===== FUNCIONES DE LOCALSTORAGE =====
+        function saveProgress(showIndicator) {
+            var progressData = {
+                currentQuestionIndex: currentQuestionIndex,
+                questions: questions,
+                score: score,
+                answeredQuestions: answeredQuestions,
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('ppl_quiz_progress', JSON.stringify(progressData));
+
+            // Guardado silencioso - no mostrar indicador
+        }
+
+        function loadProgress() {
+            var saved = localStorage.getItem('ppl_quiz_progress');
+            if (saved) {
+                return JSON.parse(saved);
+            }
+            return null;
+        }
+
+        function confirmClearProgress() {
+            if (confirm('¿Estás seguro de que quieres eliminar el progreso guardado?')) {
+                // Eliminar del localStorage
+                localStorage.removeItem('ppl_quiz_progress');
+
+                // Limpiar variables de memoria
+                currentQuestionIndex = 0;
+                questions = [];
+                score = 0;
+                answeredQuestions = {};
+
+                // Ocultar botones de progreso
+                document.getElementById('continue-btn').style.display = 'none';
+                document.getElementById('delete-progress-btn').style.display = 'none';
+                document.getElementById('saved-progress-info').style.display = 'none';
+
+                // Recargar la página para actualizar todo
+                window.location.reload(true);
+            }
+        }
+
+        function checkForSavedProgress() {
+            var saved = loadProgress();
+            if (saved && saved.questions && saved.questions.length > 0) {
+                // Mostrar botones de continuar y borrar
+                document.getElementById('continue-btn').style.display = 'block';
+                document.getElementById('delete-progress-btn').style.display = 'block';
+                document.getElementById('saved-progress-info').style.display = 'block';
+
+                // Calcular información del progreso
+                var currentQ = saved.currentQuestionIndex + 1;
+                var totalQ = saved.questions.length;
+                var percentage = ((currentQ / totalQ) * 100).toFixed(0);
+
+                // Calcular tiempo desde que se guardó
+                var now = new Date().getTime();
+                var savedTime = saved.timestamp || now;
+                var timeDiff = Math.floor((now - savedTime) / 1000 / 60); // minutos
+                var timeText = '';
+
+                if (timeDiff < 1) {
+                    timeText = 'hace un momento';
+                } else if (timeDiff < 60) {
+                    timeText = 'hace ' + timeDiff + ' minuto' + (timeDiff > 1 ? 's' : '');
+                } else {
+                    var hours = Math.floor(timeDiff / 60);
+                    timeText = 'hace ' + hours + ' hora' + (hours > 1 ? 's' : '');
+                }
+
+                // Mostrar información del progreso
+                document.getElementById('progress-details').innerHTML =
+                    '<strong>Progreso guardado:</strong> Pregunta ' + currentQ + ' de ' + totalQ +
+                    ' (' + percentage + '%) - ' + timeText;
+            } else {
+                // Ocultar botones si no hay progreso
+                document.getElementById('continue-btn').style.display = 'none';
+                document.getElementById('delete-progress-btn').style.display = 'none';
+                document.getElementById('saved-progress-info').style.display = 'none';
+            }
+        }
+
+        // ===== FUNCIONES PARA CONTINUAR PROGRESO =====
+        function continueSavedQuiz() {
+            var saved = loadProgress();
+            if (saved) {
+                currentQuestionIndex = saved.currentQuestionIndex;
+                questions = saved.questions;
+                score = saved.score;
+                answeredQuestions = saved.answeredQuestions || {};
+
+                document.getElementById('range-selection').style.display = 'none';
+                document.getElementById('dbLength').style.display = 'none';
+                document.getElementById('quiz-container').style.display = 'block';
+                document.getElementById('back-btn').style.display = 'block';
+                document.querySelector('.progress').style.display = 'block';
+                document.getElementById('home-btn').style.display = 'none';
+
+                showQuestion();
+            }
+        }
+
+        function showBackModal() {
+            saveProgress(false); // No mostrar indicador al volver al inicio
+            document.getElementById('back-modal').style.display = 'block';
+        }
+
+        function closeBackModal() {
+            document.getElementById('back-modal').style.display = 'none';
+        }
+
+        function confirmBackToHome() {
+            document.getElementById('back-modal').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('range-selection').style.display = 'block';
+            document.getElementById('dbLength').style.display = 'block';
+            document.getElementById('quiz-title').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+            document.querySelector('.progress').style.display = 'none';
+            document.getElementById('home-btn').style.display = 'flex';
+
+            // Actualizar botones de progreso guardado
+            checkForSavedProgress();
+        }
+
+        // ===== FUNCIONES PRINCIPALES DEL QUIZ =====
+        function updateBlock() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredQuestions = {};
+
+            var randomMode = document.getElementById("randomModeSwitch").checked;
+
+            if (randomMode) {
+                // Modo: N preguntas aleatorias de toda la base
+                var count = parseInt(document.getElementById("random-count").value);
+
+                if (isNaN(count) || count < 1 || count > questionsRaw.length) {
+                    alert("Por favor, introduce una cantidad válida de preguntas (1-" + questionsRaw.length + ")");
+                    return;
+                }
+
+                // Mezclar todas las preguntas y tomar las primeras N
+                questions = shuffle(questionsRaw.slice()).slice(0, count);
+            } else {
+                // Modo: Rango de preguntas
+                var questStart = parseInt(document.getElementById("start-index").value) - 1;
+                var questEnd = parseInt(document.getElementById("end-index").value);
+
+                if (isNaN(questStart) || isNaN(questEnd) || questStart < 0 || questEnd > questionsRaw.length || questStart >= questEnd) {
+                    alert("Por favor, introduce un rango válido de preguntas.");
+                    return;
+                }
+
+                if (document.getElementById("shuffleSwitch").checked) {
+                    questions = shuffle(questionsRaw.slice(questStart, questEnd));
+                } else {
+                    questions = questionsRaw.slice(questStart, questEnd);
+                }
+            }
+
+            // Limpiar progreso anterior y empezar nuevo
+            localStorage.removeItem('ppl_quiz_progress');
+
+            document.getElementById("range-selection").style.display = "none";
+            document.getElementById("dbLength").style.display = "none";
+            document.getElementById("quiz-container").style.display = "block";
+            document.getElementById("back-btn").style.display = "block";
+            document.getElementById("next-btn").disabled = false;
+            document.querySelector('.progress').style.display = 'block';
+            document.getElementById("home-btn").style.display = "none";
+
+            showQuestion();
+            saveProgress(false); // No mostrar indicador al iniciar
+        }
+
+        function shuffle(array) {
+            var newArray = array.slice();
+            for (var i = newArray.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = newArray[i];
+                newArray[i] = newArray[j];
+                newArray[j] = temp;
+            }
+            return newArray;
+        }
+
+        function checkAnswer(selectedAnswer, selectedIndex) {
+            var currentQuestion = questions[currentQuestionIndex];
+            var correctAnswerIndex = currentQuestion.correctAnswerIndex;
+            var optionsContainer = document.getElementById("options-container");
+
+            var options = optionsContainer.getElementsByTagName("button");
+            for (var i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+            }
+
+            var selectedOption = optionsContainer.querySelector('button[data-option="' + selectedAnswer + '"]');
+            if (selectedOption) {
+                if (selectedIndex == correctAnswerIndex) {
+                    selectedOption.classList.add('option-correct');
+                    // Solo sumar al score si no había respondido antes
+                    if (!answeredQuestions[currentQuestionIndex]) {
+                        score++;
+                    }
+                } else {
+                    selectedOption.classList.add('option-incorrect');
+                    var correctOption = optionsContainer.querySelector('button[data-index="' + correctAnswerIndex + '"]');
+                    if (correctOption) {
+                        correctOption.classList.add('option-correct');
+                    }
+                }
+            }
+
+            // Marcar pregunta como respondida
+            answeredQuestions[currentQuestionIndex] = {
+                selectedIndex: selectedIndex,
+                isCorrect: selectedIndex == correctAnswerIndex
+            };
+
+            document.getElementById("next-btn").disabled = false;
+            saveProgress(true); // Mostrar indicador al responder pregunta
+        }
+
+        function nextQuestion() {
+            resetColors();
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+                saveProgress(false); // No mostrar indicador al cambiar de pregunta
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            var scoreDisplay = document.getElementById("score");
+            var percentage = ((score / questions.length) * 100).toFixed(1);
+            scoreDisplay.innerHTML = "Tu puntuación es: " + score + "/" + questions.length + " (" + percentage + "%)";
+
+            document.getElementById("score-container").style.display = "block";
+            document.getElementById("quiz-container").style.display = "none";
+            document.getElementById("back-btn").style.display = "none";
+            document.querySelector('.progress').style.display = 'none';
+
+            // Generar resumen de preguntas incorrectas
+            generateIncorrectAnswersSummary();
+
+            // Limpiar progreso al terminar
+            localStorage.removeItem('ppl_quiz_progress');
+        }
+
+        function generateIncorrectAnswersSummary() {
+            var summaryContainer = document.getElementById("incorrect-answers-summary");
+            var incorrectAnswers = [];
+
+            // Recopilar preguntas incorrectas
+            for (var i = 0; i < questions.length; i++) {
+                if (answeredQuestions[i] && !answeredQuestions[i].isCorrect) {
+                    incorrectAnswers.push({
+                        index: i,
+                        question: questions[i],
+                        userAnswer: answeredQuestions[i].selectedIndex
+                    });
+                }
+            }
+
+            // Si no hay errores, mostrar mensaje de felicitación
+            if (incorrectAnswers.length === 0) {
+                summaryContainer.innerHTML = '<div class="perfect-score-message">¡Perfecto! 🎉 Respondiste todas las preguntas correctamente.</div>';
+                return;
+            }
+
+            // Generar HTML para preguntas incorrectas
+            var html = '<h3 class="summary-title">Preguntas Incorrectas (' + incorrectAnswers.length + ')</h3>';
+
+            incorrectAnswers.forEach(function(item) {
+                var question = item.question;
+                var userAnswerText = question.options[item.userAnswer];
+                var correctAnswerText = question.options[question.correctAnswerIndex];
+
+                html += '<div class="incorrect-answer-item">';
+                html += '<div class="incorrect-question-number">Pregunta #' + (item.index + 1) + '</div>';
+                html += '<div class="incorrect-question-text">' + question.question + '</div>';
+                html += '<div class="answer-option user-answer">';
+                html += '<span class="answer-label">Tu respuesta:</span>' + userAnswerText;
+                html += '</div>';
+                html += '<div class="answer-option correct-answer">';
+                html += '<span class="answer-label">Respuesta correcta:</span>' + correctAnswerText;
+                html += '</div>';
+                html += '</div>';
+            });
+
+            summaryContainer.innerHTML = html;
+        }
+
+        function restartQuiz() {
+            localStorage.removeItem('ppl_quiz_progress');
+            location.reload();
+        }
+
+        function showQuestion() {
+            var currentQuestion = questions[currentQuestionIndex];
+            document.getElementById("question").innerHTML = currentQuestion.question;
+            var optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+
+            currentQuestion.options.forEach(function (option, index) {
+                var button = document.createElement("button");
+                button.className = "btn btn-secondary";
+                button.innerHTML = option;
+                button.dataset.option = option;
+                button.dataset.index = index;
+                button.onclick = function () {
+                    checkAnswer(option, index);
+                };
+                optionsContainer.appendChild(button);
+            });
+
+            // Si esta pregunta ya fue respondida, mostrar la respuesta
+            if (answeredQuestions[currentQuestionIndex]) {
+                var answered = answeredQuestions[currentQuestionIndex];
+                setTimeout(function() {
+                    var selectedOption = optionsContainer.querySelector('button[data-index="' + answered.selectedIndex + '"]');
+                    if (selectedOption) {
+                        if (answered.isCorrect) {
+                            selectedOption.classList.add('option-correct');
+                        } else {
+                            selectedOption.classList.add('option-incorrect');
+                            var correctOption = optionsContainer.querySelector('button[data-index="' + currentQuestion.correctAnswerIndex + '"]');
+                            if (correctOption) {
+                                correctOption.classList.add('option-correct');
+                            }
+                        }
+                    }
+                    var options = optionsContainer.getElementsByTagName("button");
+                    for (var i = 0; i < options.length; i++) {
+                        options[i].disabled = true;
+                    }
+                    document.getElementById("next-btn").disabled = false;
+                }, 100);
+            } else {
+                document.getElementById("next-btn").disabled = true;
+            }
+
+            // Actualizar barra de progreso
+            var progressBarText = document.getElementById("progress-text");
+            progressBarText.innerText = (currentQuestionIndex + 1) + "/" + questions.length;
+
+            var progressBar = document.getElementById("progress-bar");
+            progressBar.style.width = ((currentQuestionIndex + 1) * 100 / questions.length) + "%";
+
+            document.getElementById("quiz-title").style.display = "none";
+            document.getElementById("next-btn").style.display = "block";
+        }
+
+        function resetColors() {
+            var optionsContainer = document.getElementById("options-container");
+            var options = optionsContainer.getElementsByTagName("button");
+            for (var i = 0; i < options.length; i++) {
+                options[i].classList.remove('option-correct', 'option-incorrect');
+                options[i].disabled = false;
+            }
+        }
+    </script>
+</body>
+
+</html>
