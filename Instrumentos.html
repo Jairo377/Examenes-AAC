@@ -1869,34 +1869,34 @@
             var randomCountInput = document.getElementById('random-count');
 
             if (randomModeSwitch.checked) {
-                // Activar modo examen
+                // Activar modo examen (selección aleatoria de un bloque)
                 randomCountGroup.style.display = 'block';
-                startIndexGroup.style.display = 'none';
-                endIndexGroup.style.display = 'none';
+                startIndexGroup.style.display = 'block';
+                endIndexGroup.style.display = 'block';
 
-                // Ocultar toggles "Todas" y "Aleatorio"
+                // En modo examen, no aplican los toggles "Todas" ni "Aleatorio" de la misma manera
                 allQuestionsToggleWrapper.style.display = 'none';
                 shuffleToggleWrapper.style.display = 'none';
-
-                // Desactivar los switches (por si acaso)
+                
+                // Forzar 'aleatorio' y deshabilitar 'todas'
                 allQuestionsSwitch.checked = false;
-                shuffleSwitch.checked = false;
+                shuffleSwitch.checked = true; // El modo examen implica aleatoriedad
 
                 // Sugerir 50 preguntas por defecto
                 if (!randomCountInput.value) {
                     randomCountInput.value = 50;
                 }
+                
+                // Placeholder genérico, el max se validará dinámicamente
+                randomCountInput.placeholder = "Ej: 50";
 
-                // Actualizar placeholder con el total disponible
-                randomCountInput.placeholder = "Ej: 50 (Máx: " + questionsRaw.length + ")";
-                randomCountInput.max = questionsRaw.length;
             } else {
-                // Desactivar modo examen
+                // Desactivar modo examen (volver a modo práctica)
                 randomCountGroup.style.display = 'none';
                 startIndexGroup.style.display = 'block';
                 endIndexGroup.style.display = 'block';
 
-                // Mostrar toggles "Todas" y "Aleatorio"
+                // Restaurar visibilidad de toggles
                 allQuestionsToggleWrapper.style.display = 'block';
                 shuffleToggleWrapper.style.display = 'block';
             }
@@ -2080,16 +2080,25 @@
             var randomMode = document.getElementById("randomModeSwitch").checked;
 
             if (randomMode) {
-                // Modo: N preguntas aleatorias de toda la base
+                // Modo: N preguntas aleatorias de un RANGO
                 var count = parseInt(document.getElementById("random-count").value);
+                var questStart = parseInt(document.getElementById("start-index").value) - 1;
+                var questEnd = parseInt(document.getElementById("end-index").value);
 
-                if (isNaN(count) || count < 1 || count > questionsRaw.length) {
-                    alert("Por favor, introduce una cantidad válida de preguntas (1-" + questionsRaw.length + ")");
+                if (isNaN(questStart) || isNaN(questEnd) || questStart < 0 || questEnd > questionsRaw.length || questStart >= questEnd) {
+                    alert("Por favor, introduce un rango válido de preguntas.");
+                    return;
+                }
+                
+                var questionsInRange = questionsRaw.slice(questStart, questEnd);
+
+                if (isNaN(count) || count < 1 || count > questionsInRange.length) {
+                    alert("Por favor, introduce una cantidad válida de preguntas para el rango seleccionado (1-" + questionsInRange.length + ")");
                     return;
                 }
 
-                // Mezclar todas las preguntas y tomar las primeras N
-                questions = shuffle(questionsRaw.slice()).slice(0, count);
+                // Mezclar las preguntas del rango y tomar las primeras N
+                questions = shuffle(questionsInRange).slice(0, count);
             } else {
                 // Modo: Rango de preguntas
                 var questStart = parseInt(document.getElementById("start-index").value) - 1;
