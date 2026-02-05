@@ -769,6 +769,30 @@
         #range-selection, #quiz-container {
             animation: fadeIn 0.4s ease;
         }
+        /* ===== FIGURAS ZOOM ===== */
+        .figure-img {
+            cursor: zoom-in;
+        }
+
+        .figure-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .figure-overlay img {
+            max-width: 100%;
+            max-height: 100%;
+            touch-action: pan-x pan-y pinch-zoom;
+            user-select: none;
+        }
     </style>
     <title>Exámen AAC Instrumentos</title>
 </head>
@@ -869,29 +893,33 @@
             </div>
         </div>
 
-        <div id="quiz-container" class="centered-container" style="display: none;">
+       <div id="quiz-container" class="centered-container" style="display: none;">
             <div id="question-count" class="float-center"></div>
 
+            <!-- PREGUNTA -->
             <h4 id="question" class="mt-1"></h4>
             <!-- CONTENEDOR DE FIGURAS -->
             <div id="figures-container" style="margin: 15px 0;"></div>
             <div id="options-container" class="btn-group-vertical mt-3"></div>
 
-            <!-- Botón Siguiente (navegación principal) -->
+            <!-- BOTONES -->
             <button id="next-btn" class="btn btn-next-primary btn-block" onclick="nextQuestion()" style="display: none;">
                 Siguiente →
             </button>
 
-            <!-- Botón Volver al Inicio (acción secundaria) -->
             <button id="back-btn" class="btn btn-back-secondary btn-block" onclick="showBackModal()" style="display: none;">
                 Volver al Inicio
             </button>
+
+            <!-- FIGURAS -->
+            <div id="figures-container" style="margin: 15px 0;"></div>
         </div>
 
         <div id="score-container" style="display: none;">
             <p id="score" class="text-center mt-3"></p>
             <button id="restart-btn" class="btn btn-secondary btn-block mt-3" onclick="restartQuiz()">Iniciar
                 nuevamente</button>
+            <button id="review-incorrect-btn" class="btn btn-info btn-block mt-3" onclick="reviewIncorrect()" style="display: none;">Repasar las incorrectas</button>
             <button id="review-incorrect-btn" class="btn btn-info btn-block mt-3" onclick="reviewIncorrect()" style="display: none;">Repasar las incorrectas</button>
 
             <!-- Resumen de preguntas incorrectas -->
@@ -1876,16 +1904,23 @@
 
             if (randomModeSwitch.checked) {
                 // Activar modo examen (selección aleatoria de un bloque)
+                // Activar modo examen (selección aleatoria de un bloque)
                 randomCountGroup.style.display = 'block';
                 startIndexGroup.style.display = 'block';
                 endIndexGroup.style.display = 'block';
+                startIndexGroup.style.display = 'block';
+                endIndexGroup.style.display = 'block';
 
+                // En modo examen, no aplican los toggles "Todas" ni "Aleatorio" de la misma manera
                 // En modo examen, no aplican los toggles "Todas" ni "Aleatorio" de la misma manera
                 allQuestionsToggleWrapper.style.display = 'none';
                 shuffleToggleWrapper.style.display = 'none';
                 
                 // Forzar 'aleatorio' y deshabilitar 'todas'
+                
+                // Forzar 'aleatorio' y deshabilitar 'todas'
                 allQuestionsSwitch.checked = false;
+                shuffleSwitch.checked = true; // El modo examen implica aleatoriedad
                 shuffleSwitch.checked = true; // El modo examen implica aleatoriedad
 
                 // Sugerir 50 preguntas por defecto
@@ -1896,12 +1931,18 @@
                 // Placeholder genérico, el max se validará dinámicamente
                 randomCountInput.placeholder = "Ej: 50";
 
+                
+                // Placeholder genérico, el max se validará dinámicamente
+                randomCountInput.placeholder = "Ej: 50";
+
             } else {
+                // Desactivar modo examen (volver a modo práctica)
                 // Desactivar modo examen (volver a modo práctica)
                 randomCountGroup.style.display = 'none';
                 startIndexGroup.style.display = 'block';
                 endIndexGroup.style.display = 'block';
 
+                // Restaurar visibilidad de toggles
                 // Restaurar visibilidad de toggles
                 allQuestionsToggleWrapper.style.display = 'block';
                 shuffleToggleWrapper.style.display = 'block';
@@ -1953,6 +1994,8 @@
                 answeredQuestions: answeredQuestions,
                 timestamp: new Date().getTime(),
                 isReviewing: isReviewing
+                timestamp: new Date().getTime(),
+                isReviewing: isReviewing
             };
             localStorage.setItem('instrumentos_quiz_progress', JSON.stringify(progressData));
 
@@ -1977,6 +2020,7 @@
                 questions = [];
                 score = 0;
                 answeredQuestions = {};
+                isReviewing = false;
                 isReviewing = false;
 
                 // Ocultar botones de progreso
@@ -2019,9 +2063,12 @@
 
                 var reviewText = saved.isReviewing ? ' (repaso)' : '';
 
+                var reviewText = saved.isReviewing ? ' (repaso)' : '';
+
                 // Mostrar información del progreso
                 document.getElementById('progress-details').innerHTML =
                     '<strong>Progreso guardado:</strong> Pregunta ' + currentQ + ' de ' + totalQ +
+                    ' (' + percentage + '%) - ' + timeText + reviewText;
                     ' (' + percentage + '%) - ' + timeText + reviewText;
             } else {
                 // Ocultar botones si no hay progreso
@@ -2039,6 +2086,7 @@
                 questions = saved.questions;
                 score = saved.score;
                 answeredQuestions = saved.answeredQuestions || {};
+                isReviewing = saved.isReviewing || false;
                 isReviewing = saved.isReviewing || false;
 
                 document.getElementById('range-selection').style.display = 'none';
@@ -2082,19 +2130,35 @@
             score = 0;
             answeredQuestions = {};
             isReviewing = false;
+            isReviewing = false;
 
             var randomMode = document.getElementById("randomModeSwitch").checked;
 
             if (randomMode) {
                 // Modo: N preguntas aleatorias de un RANGO
+                // Modo: N preguntas aleatorias de un RANGO
                 var count = parseInt(document.getElementById("random-count").value);
+                var questStart = parseInt(document.getElementById("start-index").value) - 1;
+                var questEnd = parseInt(document.getElementById("end-index").value);
                 var questStart = parseInt(document.getElementById("start-index").value) - 1;
                 var questEnd = parseInt(document.getElementById("end-index").value);
 
                 if (isNaN(questStart) || isNaN(questEnd) || questStart < 0 || questEnd > questionsRaw.length || questStart >= questEnd) {
                     alert("Por favor, introduce un rango válido de preguntas.");
+                if (isNaN(questStart) || isNaN(questEnd) || questStart < 0 || questEnd > questionsRaw.length || questStart >= questEnd) {
+                    alert("Por favor, introduce un rango válido de preguntas.");
                     return;
                 }
+                
+                var questionsInRange = questionsRaw.slice(questStart, questEnd);
+
+                if (isNaN(count) || count < 1 || count > questionsInRange.length) {
+                    alert("Por favor, introduce una cantidad válida de preguntas para el rango seleccionado (1-" + questionsInRange.length + ")");
+                    return;
+                }
+
+                // Mezclar las preguntas del rango y tomar las primeras N
+                questions = shuffle(questionsInRange).slice(0, count);
                 
                 var questionsInRange = questionsRaw.slice(questStart, questEnd);
 
@@ -2217,26 +2281,44 @@
         function generateIncorrectAnswersSummary() {
             var summaryContainer = document.getElementById("incorrect-answers-summary");
             incorrectQuestions = [];
+            incorrectQuestions = [];
 
             // Recopilar preguntas incorrectas
             for (var i = 0; i < questions.length; i++) {
                 if (answeredQuestions[i] && !answeredQuestions[i].isCorrect) {
+                    incorrectQuestions.push(questions[i]);
                     incorrectQuestions.push(questions[i]);
                 }
             }
 
             // Si no hay errores, mostrar mensaje de felicitación
             if (incorrectQuestions.length === 0) {
+            if (incorrectQuestions.length === 0) {
                 summaryContainer.innerHTML = '<div class="perfect-score-message">¡Perfecto! 🎉 Respondiste todas las preguntas correctamente.</div>';
+                document.getElementById('review-incorrect-btn').style.display = 'none';
                 document.getElementById('review-incorrect-btn').style.display = 'none';
                 return;
             }
 
             document.getElementById('review-incorrect-btn').style.display = 'block';
 
+            document.getElementById('review-incorrect-btn').style.display = 'block';
+
             // Generar HTML para preguntas incorrectas
             var html = '<h3 class="summary-title">Preguntas Incorrectas (' + incorrectQuestions.length + ')</h3>';
+            var html = '<h3 class="summary-title">Preguntas Incorrectas (' + incorrectQuestions.length + ')</h3>';
 
+            incorrectQuestions.forEach(function(item, index) {
+                var question = item;
+                var userAnswerIndex = -1;
+                for (var i = 0; i < questions.length; i++) {
+                    if (questions[i] === question) {
+                        userAnswerIndex = answeredQuestions[i].selectedIndex;
+                        break;
+                    }
+                }
+                
+                var userAnswerText = question.options[userAnswerIndex];
             incorrectQuestions.forEach(function(item, index) {
                 var question = item;
                 var userAnswerIndex = -1;
@@ -2252,6 +2334,7 @@
 
                 html += '<div class="incorrect-answer-item">';
                 html += '<div class="incorrect-question-number">Pregunta #' + (index + 1) + '</div>';
+                html += '<div class="incorrect-question-number">Pregunta #' + (index + 1) + '</div>';
                 html += '<div class="incorrect-question-text">' + question.question + '</div>';
                 html += '<div class="answer-option user-answer">';
                 html += '<span class="answer-label">Tu respuesta:</span>' + userAnswerText;
@@ -2263,6 +2346,20 @@
             });
 
             summaryContainer.innerHTML = html;
+        }
+
+        function reviewIncorrect() {
+            questions = incorrectQuestions;
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredQuestions = {};
+            isReviewing = true;
+            document.getElementById('score-container').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            document.querySelector('.progress').style.display = 'block';
+            document.getElementById('back-btn').style.display = 'block';
+            showQuestion();
+            saveProgress(false);
         }
 
         function reviewIncorrect() {
