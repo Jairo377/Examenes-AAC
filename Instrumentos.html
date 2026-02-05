@@ -7,7 +7,7 @@
     <meta name="description" content="Examen AAC Instrumentos - Práctica de preguntas para habilitacion de instrumentos">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style type="text/css">
-        /* ===== VARIABLES & DISEÑO MODERNO ===== */
+        /* ===== VARIABLES & DISEÑO MODERNO 1===== */
         :root {
             --primary-color: #34495E;
             --secondary-color: #FFB800;
@@ -898,8 +898,8 @@
 
             <!-- PREGUNTA -->
             <h4 id="question" class="mt-1"></h4>
-            <!-- CONTENEDOR DE FIGURAS -->
-            <div id="figures-container" style="margin: 15px 0;"></div>
+
+            <!-- OPCIONES -->
             <div id="options-container" class="btn-group-vertical mt-3"></div>
 
             <!-- BOTONES -->
@@ -919,7 +919,6 @@
             <p id="score" class="text-center mt-3"></p>
             <button id="restart-btn" class="btn btn-secondary btn-block mt-3" onclick="restartQuiz()">Iniciar
                 nuevamente</button>
-            <button id="review-incorrect-btn" class="btn btn-info btn-block mt-3" onclick="reviewIncorrect()" style="display: none;">Repasar las incorrectas</button>
             <button id="review-incorrect-btn" class="btn btn-info btn-block mt-3" onclick="reviewIncorrect()" style="display: none;">Repasar las incorrectas</button>
 
             <!-- Resumen de preguntas incorrectas -->
@@ -1877,7 +1876,8 @@
         // ===== MAPA DE FIGURAS POR PREGUNTA =====
         // ===== MAPA DE FIGURAS POR PREGUNTA =====
         var questionFigures = {
-            848: [001]   // Pregunta 848 → PAG-1.png
+            1: [1,7],
+            2: [5,9]   // Pregunta 848 → PAG-1.png
         };
 
         // Inicialización al cargar la página
@@ -1904,23 +1904,16 @@
 
             if (randomModeSwitch.checked) {
                 // Activar modo examen (selección aleatoria de un bloque)
-                // Activar modo examen (selección aleatoria de un bloque)
                 randomCountGroup.style.display = 'block';
                 startIndexGroup.style.display = 'block';
                 endIndexGroup.style.display = 'block';
-                startIndexGroup.style.display = 'block';
-                endIndexGroup.style.display = 'block';
 
-                // En modo examen, no aplican los toggles "Todas" ni "Aleatorio" de la misma manera
                 // En modo examen, no aplican los toggles "Todas" ni "Aleatorio" de la misma manera
                 allQuestionsToggleWrapper.style.display = 'none';
                 shuffleToggleWrapper.style.display = 'none';
                 
                 // Forzar 'aleatorio' y deshabilitar 'todas'
-                
-                // Forzar 'aleatorio' y deshabilitar 'todas'
                 allQuestionsSwitch.checked = false;
-                shuffleSwitch.checked = true; // El modo examen implica aleatoriedad
                 shuffleSwitch.checked = true; // El modo examen implica aleatoriedad
 
                 // Sugerir 50 preguntas por defecto
@@ -1931,18 +1924,12 @@
                 // Placeholder genérico, el max se validará dinámicamente
                 randomCountInput.placeholder = "Ej: 50";
 
-                
-                // Placeholder genérico, el max se validará dinámicamente
-                randomCountInput.placeholder = "Ej: 50";
-
             } else {
-                // Desactivar modo examen (volver a modo práctica)
                 // Desactivar modo examen (volver a modo práctica)
                 randomCountGroup.style.display = 'none';
                 startIndexGroup.style.display = 'block';
                 endIndexGroup.style.display = 'block';
 
-                // Restaurar visibilidad de toggles
                 // Restaurar visibilidad de toggles
                 allQuestionsToggleWrapper.style.display = 'block';
                 shuffleToggleWrapper.style.display = 'block';
@@ -1994,8 +1981,6 @@
                 answeredQuestions: answeredQuestions,
                 timestamp: new Date().getTime(),
                 isReviewing: isReviewing
-                timestamp: new Date().getTime(),
-                isReviewing: isReviewing
             };
             localStorage.setItem('instrumentos_quiz_progress', JSON.stringify(progressData));
 
@@ -2020,7 +2005,6 @@
                 questions = [];
                 score = 0;
                 answeredQuestions = {};
-                isReviewing = false;
                 isReviewing = false;
 
                 // Ocultar botones de progreso
@@ -2063,12 +2047,9 @@
 
                 var reviewText = saved.isReviewing ? ' (repaso)' : '';
 
-                var reviewText = saved.isReviewing ? ' (repaso)' : '';
-
                 // Mostrar información del progreso
                 document.getElementById('progress-details').innerHTML =
                     '<strong>Progreso guardado:</strong> Pregunta ' + currentQ + ' de ' + totalQ +
-                    ' (' + percentage + '%) - ' + timeText + reviewText;
                     ' (' + percentage + '%) - ' + timeText + reviewText;
             } else {
                 // Ocultar botones si no hay progreso
@@ -2086,7 +2067,6 @@
                 questions = saved.questions;
                 score = saved.score;
                 answeredQuestions = saved.answeredQuestions || {};
-                isReviewing = saved.isReviewing || false;
                 isReviewing = saved.isReviewing || false;
 
                 document.getElementById('range-selection').style.display = 'none';
@@ -2130,35 +2110,19 @@
             score = 0;
             answeredQuestions = {};
             isReviewing = false;
-            isReviewing = false;
 
             var randomMode = document.getElementById("randomModeSwitch").checked;
 
             if (randomMode) {
                 // Modo: N preguntas aleatorias de un RANGO
-                // Modo: N preguntas aleatorias de un RANGO
                 var count = parseInt(document.getElementById("random-count").value);
                 var questStart = parseInt(document.getElementById("start-index").value) - 1;
                 var questEnd = parseInt(document.getElementById("end-index").value);
-                var questStart = parseInt(document.getElementById("start-index").value) - 1;
-                var questEnd = parseInt(document.getElementById("end-index").value);
 
-                if (isNaN(questStart) || isNaN(questEnd) || questStart < 0 || questEnd > questionsRaw.length || questStart >= questEnd) {
-                    alert("Por favor, introduce un rango válido de preguntas.");
                 if (isNaN(questStart) || isNaN(questEnd) || questStart < 0 || questEnd > questionsRaw.length || questStart >= questEnd) {
                     alert("Por favor, introduce un rango válido de preguntas.");
                     return;
                 }
-                
-                var questionsInRange = questionsRaw.slice(questStart, questEnd);
-
-                if (isNaN(count) || count < 1 || count > questionsInRange.length) {
-                    alert("Por favor, introduce una cantidad válida de preguntas para el rango seleccionado (1-" + questionsInRange.length + ")");
-                    return;
-                }
-
-                // Mezclar las preguntas del rango y tomar las primeras N
-                questions = shuffle(questionsInRange).slice(0, count);
                 
                 var questionsInRange = questionsRaw.slice(questStart, questEnd);
 
@@ -2281,44 +2245,26 @@
         function generateIncorrectAnswersSummary() {
             var summaryContainer = document.getElementById("incorrect-answers-summary");
             incorrectQuestions = [];
-            incorrectQuestions = [];
 
             // Recopilar preguntas incorrectas
             for (var i = 0; i < questions.length; i++) {
                 if (answeredQuestions[i] && !answeredQuestions[i].isCorrect) {
-                    incorrectQuestions.push(questions[i]);
                     incorrectQuestions.push(questions[i]);
                 }
             }
 
             // Si no hay errores, mostrar mensaje de felicitación
             if (incorrectQuestions.length === 0) {
-            if (incorrectQuestions.length === 0) {
                 summaryContainer.innerHTML = '<div class="perfect-score-message">¡Perfecto! 🎉 Respondiste todas las preguntas correctamente.</div>';
-                document.getElementById('review-incorrect-btn').style.display = 'none';
                 document.getElementById('review-incorrect-btn').style.display = 'none';
                 return;
             }
 
             document.getElementById('review-incorrect-btn').style.display = 'block';
 
-            document.getElementById('review-incorrect-btn').style.display = 'block';
-
             // Generar HTML para preguntas incorrectas
             var html = '<h3 class="summary-title">Preguntas Incorrectas (' + incorrectQuestions.length + ')</h3>';
-            var html = '<h3 class="summary-title">Preguntas Incorrectas (' + incorrectQuestions.length + ')</h3>';
 
-            incorrectQuestions.forEach(function(item, index) {
-                var question = item;
-                var userAnswerIndex = -1;
-                for (var i = 0; i < questions.length; i++) {
-                    if (questions[i] === question) {
-                        userAnswerIndex = answeredQuestions[i].selectedIndex;
-                        break;
-                    }
-                }
-                
-                var userAnswerText = question.options[userAnswerIndex];
             incorrectQuestions.forEach(function(item, index) {
                 var question = item;
                 var userAnswerIndex = -1;
@@ -2334,7 +2280,6 @@
 
                 html += '<div class="incorrect-answer-item">';
                 html += '<div class="incorrect-question-number">Pregunta #' + (index + 1) + '</div>';
-                html += '<div class="incorrect-question-number">Pregunta #' + (index + 1) + '</div>';
                 html += '<div class="incorrect-question-text">' + question.question + '</div>';
                 html += '<div class="answer-option user-answer">';
                 html += '<span class="answer-label">Tu respuesta:</span>' + userAnswerText;
@@ -2346,20 +2291,6 @@
             });
 
             summaryContainer.innerHTML = html;
-        }
-
-        function reviewIncorrect() {
-            questions = incorrectQuestions;
-            currentQuestionIndex = 0;
-            score = 0;
-            answeredQuestions = {};
-            isReviewing = true;
-            document.getElementById('score-container').style.display = 'none';
-            document.getElementById('quiz-container').style.display = 'block';
-            document.querySelector('.progress').style.display = 'block';
-            document.getElementById('back-btn').style.display = 'block';
-            showQuestion();
-            saveProgress(false);
         }
 
         function reviewIncorrect() {
@@ -2396,12 +2327,52 @@
                 if (questionFigures[questionNumber]) {
                     questionFigures[questionNumber].forEach(function(page) {
                         var img = document.createElement("img");
-                        img.src = "Figuras_Instrumentos/PAG-" + page + ".png";
-                        img.alt = "Figura " + page;
+
+                        // Convierte 1 → 001, 12 → 012, etc.
+                        var pageFormatted = String(page).padStart(3, "0");
+
+                        img.src = "Figuras_Instrumentos/PAG-" + pageFormatted + ".png";
+                        img.alt = "Figura " + pageFormatted;
                         img.style.width = "100%";
                         img.style.marginBottom = "12px";
                         img.loading = "lazy";
+                        img.className = "figure-img";
+                        img.onclick = function () {
+                            var overlay = document.createElement("div");
+                            overlay.className = "figure-overlay";
 
+                            var fullImg = document.createElement("img");
+                            fullImg.src = img.src;
+
+                            overlay.appendChild(fullImg);
+                            document.body.appendChild(overlay);
+
+                            let startY = 0;
+                            let isZoomed = false;
+
+                            fullImg.addEventListener("touchstart", function (e) {
+                                if (e.touches.length === 2) isZoomed = true;
+                                startY = e.touches[0].clientY;
+                            });
+
+                            fullImg.addEventListener("touchmove", function (e) {
+                                if (isZoomed) return;
+
+                                if (e.touches[0].clientY - startY > 120) {
+                                    document.body.removeChild(overlay);
+                                }
+                            });
+
+                            fullImg.addEventListener("touchend", function () {
+                                setTimeout(() => isZoomed = false, 100);
+                            });
+
+                            overlay.onclick = function (e) {
+                                if (e.target === overlay) {
+                                    document.body.removeChild(overlay);
+                                }
+                            };
+                        };
                         figuresContainer.appendChild(img);
                     });
                 }
